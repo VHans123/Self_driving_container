@@ -2,9 +2,7 @@
 
 This is the repository of the self driving container.
 
-
 It is split up in three parts.
-
 
 1 The first one is the container chassis, in this you will find SolidWork files, calculations and motor controls.
 
