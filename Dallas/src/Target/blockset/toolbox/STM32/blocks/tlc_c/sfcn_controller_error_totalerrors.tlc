@@ -1,0 +1,93 @@
+%%***************************************************************************************
+%% file         sfcn_controller_error_totalerrors.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_controller_error_totalerrors "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("errorcodes.h")>
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %% get the name of the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+
+  %% create variables for storing data
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static uint16_t errCodesNumErrors;\n")>
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static tErrCodeData errCodesErrorBuf[8];\n")>
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static uint8_t errCodesHighestSeverity;\n")>
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static uint8_t errCodesTotalErrors;\n")>
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static uint8_t errCodesX, errCodesY;\n")>
+%endfunction
+
+
+
+
+%% Function: Outputs ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+%%
+{
+      /* reset use variables */
+      errCodesTotalErrors = 0;
+      errCodesHighestSeverity = 0;
+      errCodesX = 0;
+      
+      /* loop through all possible errors, in groups of 8 */
+      do
+      {
+          %if ISEQUAL(CAST("Number",block.RTWdata.eeprom), 0)
+          /* Get 8 saved errors from RAM. */
+          errCodesNumErrors = ErrCodesGetActiveErrors(errCodesErrorBuf, errCodesX, 8); 
+          %else
+          /* Get 8 saved errors from EEPROM. */
+          errCodesNumErrors = ErrCodesGetSavedErrors(errCodesErrorBuf, errCodesX, 8); 
+          %endif
+          for (errCodesY = 0; errCodesY < errCodesNumErrors; errCodesY++)
+          {
+                /* set the current severity as highest if it is higher as the last highest severity */
+                if (errCodesHighestSeverity < errCodesErrorBuf[errCodesY].param) 
+                { 
+                    errCodesHighestSeverity = errCodesErrorBuf[errCodesY].param; 
+                }
+                errCodesTotalErrors++;
+          }
+          /* increment errCodesX for the next batch of 8 errors */
+          errCodesX += 8;
+      }
+      while (errCodesNumErrors > 0);
+      
+      /* set the number of errors */
+      %<LibBlockOutputSignal(0, "", "", 0)> = errCodesTotalErrors; 
+      /* set the highest severity if needed */
+      %<LibBlockOutputSignal(1, "", "", 0)> = errCodesHighestSeverity; 
+}
+    %%
+%endfunction
+
+%%******************************* end of sfcn_controller_error_totalerrors.tlc **********

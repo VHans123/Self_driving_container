@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Digital Output</font><br>
+<p>Controls a digital output pin.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>A 'Digital Output' block sets the output level of the selected pin. If the
+input is '1' the output is high, if the input is '0' the output is low.</p>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>Use '1' for high, use '0' for low.<br>
+The used datatype is of boolean.
+</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Output pin</b>
+<dd>Selects the digital output pin.
+
+<dt><b>Configuration</b>
+<dd>A open drain output is floating when high. A push-pull output is connected to Vcc when high.
+
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+</body>
+</html>

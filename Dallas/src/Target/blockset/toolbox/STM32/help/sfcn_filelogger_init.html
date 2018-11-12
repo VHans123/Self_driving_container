@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">File Logger Init</font><br>
+<p>Block to initialize the File Logger module</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The 'File Logger Init' block instructs the code generator to enable support for the 
+File Logger module. This module allows the logging of Simulink signals (at a fixed
+time interval) into a file that is written to the SD-card.
+</p>
+<p>All signals in the ASCII log-file are separated by a semicolon. This data format allows the 
+log-files to be opened by any tool that can read CSV files, such as Microsoft Excel.
+</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Place the FAT32 formatted SD-card into the slot on the system before starting the software program.
+    <li>The File Logger Close block must be present and called explicitly to stop logging, otherwise no
+    file will be written to the SD-card. Ideally, this block is called during software shutdown for example
+    when the ignition signal goes low in automotive applications. An external trigger can also be used such
+    as a button press event or CAN message reception.
+</ul>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Filename</b>
+    <dd>Name of the log-file, including file extension. It will be written to the root directory on the SD-card.
+<dt><b>Add auto-incrementing number to filename</b>
+    <dd>If enabled, then a 3-digit sequence number will be added to the log-file and automatically increment it
+        between software program starts. So if the filename is specified as 'mylog.txt', then the first time the
+        software program is started, the log-file will be called 'mylog001.txt', the next time the software program
+        is started, it will be called 'mylog002.txt', etc.
+<dt><b>First line in log-file</b>
+    <dd>Specify the first line for the log-file. Typically, this line contains the column headers for the logged
+        data signals. Note that the File Logger module automatically adds the timestamp in the first column. The
+        next columns contain the data signals.
+<dt><b>Logging interval (ms)</b>
+    <dd>This detemins the delta time as which the data signals are sampled and written to the log-file. Specify
+    the time in milliseconds. Note that a short logging interval will increase the CPU load. It is recommended
+    to specify a value >= 5ms.
+<dt><b>Maximum signals to log</b>
+    <dd>Specify the maximum number of signals you intend to log. This determines the number of columns in the log-file
+    in addition to the timestamp column.
+<dt><b>Use dot-character as decimal seperator (comma otherwise)</b>
+    <dd>After sampling data signals, the signal valus are converted to a string in order to be able to write them to
+    the log-file. This configurable instructs the File Logger module to use either a '.'-character or ','-character
+    as a decimal separator.
+<dt><b>Automatically start logging</b>
+    <dd>Select if logging should automatically start after initialization. If not then a trigger input will appear 
+    that can be used to trigger the logging start.
+</dl>
+
+
+
+
+<p><font color="#000099" size="+1"><b>Examples</b></font></p>
+
+<p>
+Given is the following configuration:
+<dl>
+<dt>Filename: 'mylog.txt'
+<dt>Add auto-incrementing number to filename: Yes
+<dt>First line in log-file: 'time;counter1;counter2'
+<dt>Logging interval (ms): 100
+<dt>Maximum signals to log: 2
+<dt>Use dot-character as decimal seperator (comma otherwise): No
+</dl>
+</p>
+<p>
+After running the software program, the log-file 'mylog001.txt' will appear on the SD-card with the following contents:
+</p>
+<pre>
+time;counter1;counter2
+0,100;1;100
+0,200;2;101
+0,300;3;102
+0,400;4;103
+0,500;5;104
+0,600;6;105
+0,700;7;106
+0,800;8;107
+0,900;9;108
+1,000;10;109
+1,100;11;110
+....etc....
+</pre>
+
+
+</body>
+</html>

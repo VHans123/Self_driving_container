@@ -1,0 +1,94 @@
+%%***************************************************************************************
+%% file         sfcn_timeout_init.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2015 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_timeout_init "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("timeout.h")>
+
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %% Generate the function call subsystem function prototype.
+  %openfile tmpBuf
+  void TimeoutOverflowIRQ_%<block.RTWdata.moduleID>(void);
+  %closefile tmpBuf
+  %% write it to the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+  %<LibSetSourceFileSection(srcFile, "UserTop", tmpBuf)>
+
+%endfunction
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %% The TimeoutInitModule() function must be called before any other functions of
+  %% the TimeOut library are called. Therefore call TimeoutInitModule in 
+  %% BlockTypeSetup as apposed to Start !!! originally in BlockTypeSetup!!!.
+  %<LibMdlStartCustomCode("/* initialize the timer module for output compare. */\n", "execution")>
+  %<LibMdlStartCustomCode("TimeoutInitModule(%<block.RTWdata.moduleID>, %<block.RTWdata.frequency>);\n", "execution")>
+  %%
+  %%
+  /* register the free running counter overflow callback handler */
+  TimeoutRegisterOverflowCallback(%<block.RTWdata.moduleID>, TimeoutOverflowIRQ_%<block.RTWdata.moduleID>);
+  %%
+%endfunction
+
+
+
+%% Function: Outputs ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+%%
+  %% Generate the function call subsystem as a seperate function.
+  %openfile tmpBuf
+  void TimeoutOverflowIRQ_%<block.RTWdata.moduleID>(void)
+  {
+    %foreach callIdx = NumSFcnSysOutputCalls
+      %if LibIsEqual(SFcnSystemOutputCall[callIdx].BlockToCall, "unconnected")
+        %continue
+      %endif
+      %% call the downstream system
+      %<LibBlockExecuteFcnCall(block, callIdx)>\
+    %endforeach    
+  }
+  %closefile tmpBuf
+  %% write it to the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+  %<LibSetSourceFileSection(srcFile, "Functions", tmpBuf)>
+%%
+%endfunction
+
+
+%%******************************* end of sfcn_timeout_init.tlc ******************
+

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">UDP Server New Data Available</font><br>
+<p>Block to check if the UDP server has new data in its internal receive buffer.</p>
+
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+<p>This block obtains the value of the so called new data flag. By checking this flag, the application
+can determine if there is data available in the UDP server receive buffer that has not been read out
+yet.</p>
+<p>This new data flag is set each time the UDP server receives a data packet, right after it wrote the data 
+to its internal receive buffer. The new data flag is reset when the application reads data from the UDP
+server's internal receive buffer, by means of block 'UDP Server Receive'.</p>
+
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+<ul>
+    <li>Make sure the model contains an 'Ethernet Config' block, as this enables the TCP/IP stack that the UDP blocks depend on.
+    <li>Make sure the model contains an 'UDP Server Init' block, as this block requires the UDP server functionality.
+</ul>
+
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+<p>1 if new data is available in the UDP server's receive buffer that hasn't been read yet by the application, 0 otherwise.<br>
+The used datatype is of boolean.
+</p>
+
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+<dl>
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+
+</body>
+</html>

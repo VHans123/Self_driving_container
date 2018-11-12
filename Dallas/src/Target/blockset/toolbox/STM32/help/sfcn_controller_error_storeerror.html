@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Store error</font><br>
+<p>Block to store an error to RAM (and EEPROM) of the Controller</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>When this block is triggerd, an error wil be stored to RAM. If the error is already present in RAM, its occurrence counter will be incremented 
+and the time stamp will be updated.<br><br>
+If the error occurs for the first time (and only then) since startup (and therefor is not present in the RAM) it will also be stored in EEPROM.
+</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>  
+    <li>Active errors are saved at the RAM, they are lost by rebooting the ECU or by clearing the active error list.
+    <li>Stored errors are saved at the EEPROM, they are only lost by clearing the stored error list.
+    <li>For active errors the occurence counter is incremented every time an error occurs. It resets if the error is erased.
+    again as the ECU was rebooted and the error occures again. It resets if the error is erased.
+    <li>The input of the 'Store error with inports' block must be variable in order for the block to work.
+    <li>Use the 'Store errors' block when using fixed error values.
+    <li>Error codes 0 to 0x8000 are reserved for internal system errors.
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>(No initialisation block needed)</p>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>Only the 'Store errors with inports' has inputs, when used provide an uint16 containing the error code (ID) and an uint8 for the parameter.</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<p>Only the 'Store errors' block has parameters.</p>
+<dl>
+<dt><b>Error Code</b>
+  <dd>An 16-bit error code can be used. Use 'hex2dec()' 
+  to transform a hexadecimal formatted ID into a decimal ID.
+<dt><b>Parameter</b>
+  <dd>A parameter can be given. The parameter can be used for
+  the severity of the error. Suggested values are:<br>
+  10 = minor<br>
+  15 = standby<br>
+  20 = critical
+</dl>
+
+
+</body>
+</html>

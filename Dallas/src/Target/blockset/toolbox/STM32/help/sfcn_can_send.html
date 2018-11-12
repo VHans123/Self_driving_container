@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">CAN send</font><br>
+<p>Block to send CAN messages</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>With this CAN send block you can send a CAN message with a specified 
+identifier on a specified CAN bus. Each time the block is evaluated, 
+a message is send containing the input values.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Always use a CAN config block to configure the CAN channel enabling and used baud rate.
+    <li>Four IDs are reserved for the XCP protocol by design, the CAN channel depends on the 'XCP Config' block.
+    See the manaul for the used IDs.
+    <li>The CAN message supports a message up to 8 bytes. This block
+    enables the user to specify the classification.
+    <li>The CAN send block has build-in support for endianes conversion.
+    Use this support if the receiving system uses a different endianes.<br>
+    The STM32 is Little-endian (LSB first).
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>Use the CAN config block:</p>
+<ul>
+    <li>To set the baudrate for the selected CAN channel.
+    <li>To enable the specific CAN channel.
+</ul>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p><b>CAN ID (port 1)</b><br>
+The top input port specifies the CAN ID of the message in hexadecimal format. The CAN ID must be applied in a UINT32 signal.<br>
+Set the 32nd bit to 1 in the CAN ID to configure it as a 29-bit Extended CAN identifier. For example 0x80000200 for CAN ID 0x200 as 
+29-bit identifier.
+</p>
+
+<p><b>Data (port 2-9)</b><br>
+The input type depends on the configuration.<br>
+The amount of inputs depends on the configuration.
+</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Select the used channel.
+<dt><b>Identifier type</b>
+    <dd>Specify whether to use a standard (11 bit) identifier or a extended (29 bit)
+		identifier. Default setting is standard identifier.</b>
+<dt><b>Input ports</b>
+    <dd>Select the amount of ports you want from the given input type.<br>
+        You can use only up to 8 bytes.<br><br>
+
+		
+<dt><b>Input type</b>
+    <dd>Select the data type each input port will use.
+<dt><b>Byte ordering</b>
+    <dd>Set the appropriate byte ordering for your CAN message:
+	<dd>Checkbox checked = Most Significant Bit (MSB) is send first (Motorola format).
+	<dd>Checkbox unchecked = Least Significant Bit (LSB) is send first (Intel format).
+<dt><b>Sample time</b>
+    <dd>Sample time of the block. The Sample time (in seconds) defines
+        the rate at which the block is visited by the real-time scheduler of
+        the target. The value of the Sample time has to be an integer multiple
+        of the base sample time of the model.
+</dl>
+
+
+
+
+</body>
+</html>

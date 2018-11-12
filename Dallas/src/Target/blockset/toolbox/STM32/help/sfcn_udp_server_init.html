@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">UDP Server Init</font><br>
+<p>Block to initialize a UDP server.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>With this block you can initialize a UDP server for receiving UDP packets on a specified port.<br><br>
+Upon initialization the UDP server allocates a reception buffer. Each time a UDP packet is received,
+its data is written to the reception buffer. The data of the previous packet is overwritten.<br><br>
+The following blocks can be used to obtain data and information from the reception buffer:
+'UDP Server Receive', 'UDP Server New Data Available' and 'UDP Server Receive Size'.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Make sure the model contains an 'Ethernet Config' block, as this enables the TCP/IP stack that the UDP blocks depend on.
+    <li>Only one UDP Server Init block can be used in a model.
+</ul>
+
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Port</b>
+    <dd>Port number to listen on for new UDP packets. Note that the server binds to the IP address specified in the 'Ethernet Config' block.
+</dl>
+
+
+</body>
+</html>

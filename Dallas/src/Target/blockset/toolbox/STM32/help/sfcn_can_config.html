@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">CAN config</font><br>
+<p>Block to configure a CAN channel</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The 'CAN Config' block instructs the code generator to include CAN support.
+The block also configures the CAN controller communication speed and the reception
+acceptance filter.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>When not using the CAN config block, support for the given CAN
+    channel is not included in the embedded target. Thereby every CAN
+    message adressed at the controller is lost.
+    <li>The default configuration of the reception acceptance filter 
+    received all 11-bit CAN message identifiers. 
+</ul>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Enable CAN channel(s).
+<dt><b>Baudrate</b>
+    <dd>125000, 250000, 500000 or 1000000.
+<dt><b>Mask</b>
+    <dd>A value in the range 0x00000000 and 0x1fffffff. The mask part of the filter determines which 
+        bits in the received message identifiers should be matched to the corresponding bits in the code part.
+        A mask bit value of 0 means don't care.
+<dt><b>Code</b>
+    <dd>A value in the range 0x00000000 and 0x1fffffff. The code part of the filter determines what bit 
+        values to match in the received message identifier.
+<dt><b>Mode</b>
+    <dd>Mode of the reception acceptance filter where you can configure what type of CAN message identifiers
+    should be received.
+<dt><b>Transmit buffer size</b>
+    <dd>The number of software transmit buffers in addition to the 3 internal hardware buffers of the CAN controlller.
+        4 are sufficient at 500 kbits/sec, but more might be needed at lower baudrates because message transmission
+        takes longer, resulting in the 3 internal hardware buffers of the CAN controller to be occupied longer.
+<dt><b>Event buffer size</b>
+    <dd>The number of software event buffers to events such as message reception and message transmission completion.
+        8 are sufficient at 500 kbits/sec at 100% busload. More might be needed at higher baudrates because more messages
+        will be received at a similar busload.
+</dl>
+
+<p><font color="#000099" size="+1"><b>Examples</b></font></p>
+
+<p>
+For run-time performance it is recommended to finetune the reception acceptance filter so that
+primarily messages that are needed by the software application are received. Otherwise unwanted 
+messages will still be processed by the CAN driver, which is a waste of CPU power. Here you can find
+a few examples:
+</p>
+<p>
+Example 1 - receive all 11-bit and 29-bit message identifiers.<br>
+&nbsp;&nbsp;Filter = %X XXXX XXXX XXXX XXXX XXXX XXXX XXXX<br>
+&nbsp;&nbsp;Mask = 0x00000000<br>
+&nbsp;&nbsp;Code = 0x00000000 (irrelevant in this case)<br>
+&nbsp;&nbsp;Mode = Receive both 11- and 29-bit message identifers<br>
+<br>
+Example 2 - receive only 11-bit message identifiers where bits 0..3 are 0.<br>
+&nbsp;&nbsp;Filter = %X XXXX XXXX XXXX XXXX XXXX XXXX 0000<br>
+&nbsp;&nbsp;Mask = 0x0000000f<br>
+&nbsp;&nbsp;Code = 0x00000000<br>
+&nbsp;&nbsp;Mode = Receive only 11-bit message identifiers<br>
+<br>
+Example 3 - receive only the 29-bit message with identifier 0x0000400e<br>
+&nbsp;&nbsp;Filter = %0 0000 0000 0000 0100 0000 0000 1110<br>
+&nbsp;&nbsp;Mask = 0x1fffffff<br>
+&nbsp;&nbsp;Code = 0x0000400e<br>
+&nbsp;&nbsp;Mode = Receive only 29-bit message identifiers<br>
+</p>
+
+</body>
+</html>

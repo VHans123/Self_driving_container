@@ -1,0 +1,164 @@
+%% 
+%%  
+%% 
+%%
+%% Abstract:
+%%   Template definitions for Scalar.
+%%
+%% Copyright 1994-2011 The MathWorks, Inc.
+%%
+%selectfile NULL_FILE
+
+%<LibASAP2RegisterTemplate("Scalar")>
+
+%function ASAP2UserFcnRecordLayoutAlias_Scalar(dtId) void
+  %switch dtId
+  
+    %case tSS_BOOLEAN
+      %return "Scalar_BOOLEAN"
+    %case tSS_UINT8
+      %return "Scalar_UBYTE"
+    %case tSS_INT8
+      %return "Scalar_BYTE"
+    %case tSS_UINT16
+      %return "Scalar_UWORD"
+    %case tSS_INT16
+      %return "Scalar_SWORD"
+    %case tSS_UINT32
+      %return "Scalar_ULONG"
+    %case tSS_INT32
+      %return "Scalar_LONG"
+    %case tSS_SINGLE
+      %return "Scalar_FLOAT32_IEEE"
+   %case tSS_DOUBLE
+      %return "Scalar_FLOAT64_IEEE"
+   %default
+      %if LibIsEnumDataType(dtId)
+          %return "Scalar_LONG"
+      %endif
+
+      %% START_ASSERT
+      %assign errTxt = "Unhandled dataType. DataTypeID = %<dtId>"
+      %<LibReportError(errTxt)>
+      %% END_ASSERT
+  %endswitch
+%endfunction
+
+%function ASAP2UserFcnWriteRecordLayout_Scalar() Output
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_BOOLEAN)>
+      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+    
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_UINT8)>
+      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_INT8)>
+      FNC_VALUES  1 SBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_UINT16)>
+      FNC_VALUES  1 UWORD COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_INT16)>
+      FNC_VALUES 1 SWORD COLUMN_DIR DIRECT
+    /end RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_UINT32)>
+      FNC_VALUES  1 ULONG COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_INT32)>
+      FNC_VALUES  1 SLONG COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_SINGLE)>
+      FNC_VALUES  1 FLOAT32_IEEE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_DOUBLE)>
+      FNC_VALUES  1 FLOAT64_IEEE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+%endfunction
+
+%function ASAP2UserFcnWriteCharacteristic_Scalar(param) Output
+%assign dtId = LibASAP2GetDataTypeId(param)
+%selectfile ASAP2List
+%<LibASAP2GetSymbol(param)> 
+%<LibASAP2AddCharacteristicToGraphicalGroups(param)>
+%assign dataWidth   =  LibASAP2GetParamWidth(param)
+%selectfile ModelASAP2File
+    /begin CHARACTERISTIC 
+      /* Name                   */      %<LibASAP2GetSymbol(param)> 
+      /* Long Identifier        */      "%<LibASAP2GetLongID(param)>"
+      %if dataWidth > 1
+      /* Type                   */      VAL_BLK 
+      %else
+      /* Type                   */      VALUE 
+      %endif
+      /* ECU Address            */      %<LibASAP2GetAddress(param)> 
+      /* Record Layout          */      %<ASAP2UserFcnRecordLayoutAlias_Scalar(dtId)> 
+      /* Maximum Difference     */      0 
+      /* Conversion Method      */      %<LibASAP2GetCompuMethod(param)> 
+      /* Lower Limit            */      %<LibASAP2GetPhysicalMin(param)> 
+      /* Upper Limit            */      %<LibASAP2GetPhysicalMax(param)>
+      %if dataWidth > 1
+      /* Array Size             */
+        NUMBER                            %<dataWidth>
+      %endif
+    /end CHARACTERISTIC
+
+%endfunction
+
+%function ASAP2UserFcnWriteStructCharacteristic_Scalar(param) Output
+  %%
+  %assign data = FcnGetGlobalMemoryMapData(param)
+  %assert data.IsStruct
+  %%
+  %% Get the ROOT Group
+  %assign rootGroup = LibASAP2CreateGroup("%<::CompiledModel.Name>", ...
+    "%<::CompiledModel.Name>", "")
+  %% Create a Group (with name same as struct name) and make it a sub-Group of
+  %% Root Group
+  %assign parentGrpName = data.Name
+  %assign parentGrp  = LibASAP2CreateGroup(parentGrpName, "", "")
+  %assign tmpVar = LibASAP2AddSubGroupToGroup(rootGroup, parentGrp)
+  %%
+  %foreach busIdx = data.StructInfo.NumElements  
+    %assign dtId = data.StructInfo.BusElement[busIdx].DataTypeIdx
+    %assign storageId = LibGetDataTypeStorageIdFromId(dtId)
+    %% Nested bus elements are not supported
+    %if !LibIsStructDataType(dtId)
+      %assign characteristicName = LibASAP2GetSymbolForBusElement(data,busIdx)   
+      %<LibASAP2AddCharacteristicToGroup(parentGrp,characteristicName)>
+      %selectfile ASAP2List
+      %<characteristicName>       
+      %assign dataWidth   =  LibASAP2GetParamWidthForBusElement(data,busIdx)
+      %selectfile ModelASAP2File
+      /begin CHARACTERISTIC 
+      /* Name                   */      %<characteristicName>
+      /* Long Identifier        */      "%<LibASAP2GetLongIDForBusElement(data,busIdx)>"
+      %if dataWidth > 1
+        /* Type                   */      VAL_BLK 
+      %else
+        /* Type                   */      VALUE 
+      %endif
+      /* ECU Address            */      %<LibASAP2GetAddressForBusElement(data,busIdx)> 
+      /* Record Layout          */      %<ASAP2UserFcnRecordLayoutAlias_Scalar(storageId)> 
+      /* Maximum Difference     */      0 
+      /* Conversion Method      */      %<LibASAP2GetCompuMethodForBusElement(data,busIdx)> 
+      /* Lower Limit            */      %<LibASAP2GetPhysicalMinForBusElement(data,busIdx)> 
+      /* Upper Limit            */      %<LibASAP2GetPhysicalMaxForBusElement(data,busIdx)>
+      %if dataWidth > 1
+        /* Array Size             */
+        NUMBER                            %<dataWidth>
+      %endif
+      /end CHARACTERISTIC     
+ 
+    %endif
+  %endforeach
+    
+%endfunction

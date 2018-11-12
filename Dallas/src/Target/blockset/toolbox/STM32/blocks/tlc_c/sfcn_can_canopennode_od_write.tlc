@@ -1,0 +1,83 @@
+%%***************************************************************************************
+%% file         sfcn_can_canopennode_od_write.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2015 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_can_canopennode_od_write "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("co_node.h")>
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %%
+  %%
+%endfunction
+
+%% Function: Update ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal input
+%%
+%function Update(block, system) Output
+	%%
+      /* write new value to the SDO at the specified index and subindex */
+	  %switch(CAST("Number",block.RTWdata.dataType))
+      %case 1
+      CoNodeODWriteSINT8(%<block.RTWdata.index>, %<block.RTWdata.subIndex>, %<LibBlockInputSignal(0, "", "", 0)>);
+      %break
+
+      %case 2
+      CoNodeODWriteUINT8(%<block.RTWdata.index>, %<block.RTWdata.subIndex>, %<LibBlockInputSignal(0, "", "", 0)>);
+      %break
+
+      %case 3
+      CoNodeODWriteSINT16(%<block.RTWdata.index>, %<block.RTWdata.subIndex>, %<LibBlockInputSignal(0, "", "", 0)>);
+      %break
+
+      %case 4
+      CoNodeODWriteUINT16(%<block.RTWdata.index>, %<block.RTWdata.subIndex>, %<LibBlockInputSignal(0, "", "", 0)>);
+      %break
+
+      %case 5
+      CoNodeODWriteSINT32(%<block.RTWdata.index>, %<block.RTWdata.subIndex>, %<LibBlockInputSignal(0, "", "", 0)>);
+      %break
+
+      %case 6
+      CoNodeODWriteUINT32(%<block.RTWdata.index>, %<block.RTWdata.subIndex>, %<LibBlockInputSignal(0, "", "", 0)>);
+      %break
+    %endswitch
+
+  %%
+%endfunction
+
+
+
+%%******************************* end of sfcn_can_canopennode_od_write.tlc **************
+
+
+
+
+

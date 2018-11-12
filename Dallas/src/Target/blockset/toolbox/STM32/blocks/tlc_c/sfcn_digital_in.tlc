@@ -1,0 +1,60 @@
+%%***************************************************************************************
+%% file         sfcn_digital_in.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_digital_in "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("digin.h")>
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %%
+  /* configure the digital input */
+  DiginConfigure(%<block.RTWdata.pinID>, %<block.RTWdata.config>);
+  %%
+%endfunction
+
+%% Function: Output ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+	%%
+    /* read from digital input */
+    %<LibBlockOutputSignal(0, "", "", 0)> = DiginGet(%<block.RTWdata.pinID>);
+  %%
+%endfunction
+
+
+
+%%******************************* end of sfcn_digital_in.tlc ***************************
+
+
+
+
+

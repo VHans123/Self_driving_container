@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Read an error stored on the RAM or EEPROM of the controller</font><br>
+<p>Block to read an error stored on the RAM or EEPROM of the controller, active errors are read from RAM, stored from EEPROM</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The block receives an error number (starting at 1) and returns the number of active errors and the requested error data.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Error number 1 is the oldest error.
+    <li>Connect the 'number of errors' to a terminator if not used.    
+    <li>Active errors are saved in RAM, they are lost by rebooting the ECU or by clearing the active error list.
+    <li>Stored errors are saved in EEPROM, they are only lost by clearing the stored error list.
+    <li>For active errors the occurence counter is incremented every time a error occurs. 
+    It is reseted by rebooting the ECU or by clearing the active error list.
+    <li>For stored errors the occurence counter is always 1. It is reset by clearing the stored error list.
+    <li>Error codes 0 to 0x8000 are reserved for internal system errors.
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>(No initialisation block needed)</p>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>An uint8 containing the number of the error in the error list. Can be between 1 and 64.</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<p>The four error values along with the total amount of errors is returned.
+<dl>
+<dt><b>Output 1</b>
+  <dd>The first output returns the number of total number of active or stored errors. This will 
+  be returned as an uint8.
+<dt><b>Output 2</b>
+  <dd>The second output returns the error code (ID) of the requested error. This will 
+  be returned as an uint16.
+<dt><b>Output 3</b>
+  <dd>The third output returns the given parameter of the error. This 
+  will be returned as a unit8.<br><br> 
+  The parameter can be used for the severity of the error. Suggested values are:<br>
+  10 = minor<br>
+  15 = standby<br>
+  20 = critical
+<dt><b>Output 4</b>
+  <dd>The fourth output returns the number of times the requested error has occurred (see remarks).
+  This will be returned as an uint8. If this value is 0, then the requested error was not set.
+<dt><b>Output 5</b>
+  <dd>The fifth output returns the timestamp of the requested error. The timestamp is in milliseconds after system 
+  startup. This will be returned as an uint32.
+</dl>
+
+</p>
+
+</body>
+</html>

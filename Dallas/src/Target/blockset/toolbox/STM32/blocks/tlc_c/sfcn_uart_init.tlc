@@ -1,0 +1,87 @@
+%%***************************************************************************************
+%% file         sfcn_uart_init.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2014 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_uart_init "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("uart.h")>
+
+%% Function: BlockInstanceSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockInstanceSetup(block, system) void
+	%if %<block.RTWdata.useStatusOut>
+    %% get the name of the model's source file.
+    %assign srcFile = LibGetModelDotCFile()
+
+    %% create a buffer that can be used for storing the initialization result.
+    %<LibSetSourceFileSection(srcFile, "Declarations", "static uint8_t uartInitResult;\n")>
+	%endif
+%endfunction
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+
+	%if %<block.RTWdata.useStatusOut>
+    /* initialize the UART channel */
+    uartInitResult =  UartInit(%<block.RTWdata.channel>, %<block.RTWdata.baudrate>, 
+                               %<block.RTWdata.databits>, %<block.RTWdata.parity>, 
+                               %<block.RTWdata.stopbits>, %<block.RTWdata.txbufsize>,
+                               %<block.RTWdata.rxbufsize>);
+	%else
+    /* initialize the UART channel */
+    UartInit(%<block.RTWdata.channel>, %<block.RTWdata.baudrate>, %<block.RTWdata.databits>,
+             %<block.RTWdata.parity>, %<block.RTWdata.stopbits>, %<block.RTWdata.txbufsize>,
+             %<block.RTWdata.rxbufsize>);
+	%endif
+
+
+%endfunction
+
+
+%% Function: Output ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+	%%
+	%if %<block.RTWdata.useStatusOut>
+    %<LibBlockOutputSignal(0, "", "", 0)> = uartInitResult;
+	%endif
+  %%
+%endfunction
+
+
+%%******************************* end of sfcn_uart_init.tlc ****************************-
+
+
+
+
+

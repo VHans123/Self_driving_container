@@ -1,0 +1,47 @@
+%%***************************************************************************************
+%% file         sfcn_udp_server_init.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2016 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_udp_server_init "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("udp_server.h")>
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %% Note that the UDP server as supported in Simulink will only be used to
+  %% receive a maximum of 32 elements. The largest element is 32-bits (4 bytes)
+  %% so the receive buffer should be initialized for 32 * 4 = 128 bytes.
+  /* initialize the UDP server with a reception buffer that can hold up to 128 bytes */
+  UdpServerInit(%<block.RTWdata.port>, 128);
+%endfunction
+
+
+%%******************************* end of sfcn_udp_server_init.tlc ***********************
+
+
+
+
+

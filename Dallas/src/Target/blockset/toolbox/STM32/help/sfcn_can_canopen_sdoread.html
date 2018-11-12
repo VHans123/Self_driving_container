@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Bodas RC-30 Series User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">CAN open Node SDO read</font><br>
+<p>Block to send a CAN open SDO read message</p>
+<hr>
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>This CAN open SDO read block sends the message to read the data of the set index and sub-index, and 
+then put this data on the data output port. When no error occurs the done port becomes 1.</b></p>
+<hr>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Always first use a CAN open node control block to set the node to pre-operational otherwise the rest wont function.
+</ul>
+<hr>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>Use the CAN config block:</p>
+<ul>
+    <li>To set the baudrate for the selected CAN channel.
+    <li>To enable the specific CAN channel.
+</ul>
+<hr>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>
+<dt><b>Node ID (port1)</b>
+    <dd>The node ID input should be connected to the node control node ID output.<b>UINT8</b>
+
+<dt><b>start (port 2)</b><br>
+<dd>When the start input is 1, the message is send and the block waits the waiting time for a 
+<dd>response message with the right data. 
+<dd>When start is made 0 again, all the outputs becomes 0. 
+<dd>After start has been 0 and it is made 1 the message will be send again, and the block will 
+<dd>again wait for the response. <b>INT8</b><br>
+</p>
+<hr>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<dl>
+	
+<dt><b>Done (port1)</b>
+    <dd>The done port becomes 1 when the data message is received. 
+	<dd>When the waiting time is passed and no respond message is received done will 
+	<dd>become -1. <b>INT8</b>
+	
+<dt><b>Data (port2)</b>
+    <dd>The received data from the CAN open node is put on this port.<b>UINT32</b>
+	
+<dt><b>Error(port3)</b>
+    <dd>When an error occurs the error message will be put on this output.
+	<dd>When the waiting time is passed the error code is 0x11111111 the other error codes are 
+	CAN open or node specific and can be found in the data sheet of the specific node.<b>UINT32</b> 	
+	
+</dl>
+<hr>
+	
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Select the used channel: 1, 2, 3 or 4.
+	
+<dt><b>Index</b>
+    <dd>The CAN open index of the object to read, this is normally specified in the node data sheet in a Hex value. 
+	
+<dt><b>Sub-index</b>
+    <dd>The CAN open sub-index of the object to read, this is also specified in the node data sheet.<br>
+
+<dt><b>Response waiting time</b>
+    <dd>The maximum time the block has to wait for a response message in milliseconds.	
+
+<dt><b>Sample time</b>
+    <dd>Sample time of the block. The Sample time (in seconds) defines
+        the rate at which the block is visited by the real-time scheduler of
+        the target. The value of the Sample time has to be an integer multiple
+        of the base sample time of the model.
+</dl>	
+</body>
+</html>

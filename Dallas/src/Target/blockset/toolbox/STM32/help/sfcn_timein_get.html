@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Timer Input Get</font><br>
+<p>Reads information from the timer input pin.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>
+When using this block, timer input related information is read from pin, such as frequency, duty cycle, etc.
+</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<dl>
+<dt><b>Frequency</b>
+<dd>The last measured frequency on the pin in Hz.<br>
+The used datatype is uint32.<br><br>
+
+<dt><b>Duty cycle</b>
+<dd>The last measured duty cycle on the pin as a % with a scaling factor of 100 for improved resolution. 
+So 5000 = 50% for example.<br>
+Note that the duty cycle calculation works for frequencies >= 1 Hz.<br>
+The used datatype is uint16.<br><br>
+
+<dt><b>Edge count</b>
+<dd>The number of edges that were detected on the input pin since startup.<br>
+The used datatype is uint32.<br><br>
+
+<dt><b>Edge state</b>
+<dd>State of the last edge. 1 if it was a rising edge, 0 if it was a falling edge. Note that
+this output is only useful for low frequency signals where the time between edges is longer 
+than the block's sample time.<br>
+The used datatype is uint8.<br><br>
+
+<dt><b>Edge timestamp</b>
+<dd>A 32-bit timestamp value of the last edge. The timestamp is derived from an internal 32-bit free 
+running counter that runs at 24 Mhz (21 MHz for STM32F4xx targets). Note that this output is only useful for low frequency signals
+where the time between edges is longer than the block's sample time.<br>
+The used datatype is uint32.<br><br>
+
+<dt><b>Counter timestamp</b>
+<dd>The timestamp value of the internal 32-bit free running counter that runs at 24 Mhz (21 MHz for STM32F4xx targets). Can be used
+for edge related time measurements in combination with the 'Edge timestamp' value.<br>
+The used datatype is uint32.<br><br>
+
+<dt><b>0 Hz detected</b>
+<dd>A boolean flag that will go high if no edges were detected for the time specified
+as the zero Hz detection time. Upon the next edge the flag will go low again.<br>
+The used datatype is boolean.<br><br>
+</dl>
+
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Timer input pin</b>
+<dd>Selects the timer input pin. Note that the timer module this pin belongs to is specified as well.
+When a timer module is used for timer input measurements, it can not be used for other timer related
+functionality such as quadrature encoder inputs, PWM outputs, etc.
+
+<br><br>
+
+<dt><b>Zero Hz detection time</b>
+<dd>Determines after how many milliseconds since the last edge the 0 Hz detected output flag should go high.
+Specify a value of zero to not use this feature.
+
+<br><br>
+
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+</body>
+</html>

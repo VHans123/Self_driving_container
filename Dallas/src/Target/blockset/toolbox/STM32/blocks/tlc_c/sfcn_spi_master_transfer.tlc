@@ -1,0 +1,67 @@
+%%***************************************************************************************
+%% file         sfcn_spi_master_transfer.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2014 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_spi_master_transfer "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("spi_master.h")>
+%<LibAddToCommonIncludes("digout.h")>
+
+%% Function: Outputs ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+	%%
+	%if %<block.RTWdata.useSS>
+	  %if %<block.RTWdata.SSenable>
+      /* select the slave */
+      SpiMasterSetSlaveSelect(%<block.RTWdata.SSpin>, TRUE);
+      %if %<block.RTWdata.delayCycles> > 0
+        /* process delay cycles */
+        SpiMasterWait(%<block.RTWdata.delayCycles>);
+      %endif
+    %endif
+	%endif
+  
+  /* transmit the byte from the master to the slave */
+  SpiMasterTransmit(%<block.RTWdata.channel>, %<LibBlockInputSignal(0, "", "", 0)>);
+  /* read the response from the slave */
+  %<LibBlockOutputSignal(0, "", "", 0)> = SpiMasterReceive(%<block.RTWdata.channel>);
+  
+	%if %<block.RTWdata.useSS>
+	  %if %<block.RTWdata.SSdisable>
+      /* deselect the slave */
+      SpiMasterSetSlaveSelect(%<block.RTWdata.SSpin>, FALSE);
+    %endif
+	%endif
+  %%
+%endfunction
+
+
+%%******************************* end of sfcn_spi_master_transfer.tlc *******************
+
+
+
+
+

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">CANopenNode Init</font><br>
+<p>Block to initialize the CANopenNode stack for a particular CAN channel.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>A 'CANopenNode Init' block instructs the code generator to include the CANopen communication stack.
+Additionally, it specified the CAN channel to use for the CANopen communication.
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Only one instance of the CANopen communication stack is currently allowed on the controller.
+    <li>The baudrate setting in object dictionary 2102h (125 kbit/sec) overrides the value specified in
+        the 'CAN config' block.
+    
+</ul>
+
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Select the used channel to be used by the CANopen communication stack.
+
+    
+</dl>
+
+<font color="#000099" size="+1"><b>See also</b></font><br>
+<ul>
+    <li><a href="..\..\..\..\..\Doc\CANopen\HANcoderNode_gettingstarted.docx">HANcoder CANopen getting started guide</a>.
+</ul>
+
+
+</body>
+</html>

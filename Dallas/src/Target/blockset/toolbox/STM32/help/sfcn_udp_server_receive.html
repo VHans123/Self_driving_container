@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">UDP Server Receive</font><br>
+<p>Block to read data from the UDP server's internal receive buffer.</p>
+
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+<p>With this block you can access the data of the data packet that was most
+recently received by the UDP server.
+</p>
+
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+<ul>
+    <li>Make sure the model contains an 'Ethernet Config' block, as this enables the TCP/IP stack that the UDP blocks depend on.
+    <li>Make sure the model contains an 'UDP Server Init' block, as this block requires the UDP server functionality.
+</ul>
+
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+<p><b>Data (port 1-32)</b><br>
+The output type depends on the configuration.<br>
+The amount of outputs depends on the configuration.
+</p>
+
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+<dl>
+<dt><b>Output ports</b>
+    <dd>Number of output ports for this block.
+
+<br><br>
+<dt><b>Output datatype</b>
+    <dd>Select the data type each output port will use.
+
+<br><br>
+<dt><b>Byte ordering</b>
+    <dd>Set the appropriate byte ordering for your CAN message:
+	<dd>Checkbox checked = Most Significant Bit (MSB) is send first (Motorola format).
+	<dd>Checkbox unchecked = Least Significant Bit (LSB) is send first (Intel format).
+
+<br><br>
+<dt><b>Start index</b>
+    <dd>The UDP server's receive buffer can be seen as an array of bytes. This parameter
+        enables you to select the index of the byte where the read operation will start at.
+
+<br><br>
+<dt><b>Sample time</b>
+    <dd>Sample time of the block. The Sample time (in seconds) defines
+        the rate at which the block is visited by the real-time scheduler of
+        the target. The value of the Sample time has to be an integer multiple
+        of the base sample time of the model.
+</dl>
+
+
+
+
+</body>
+</html>

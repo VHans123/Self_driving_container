@@ -1,0 +1,96 @@
+%%***************************************************************************************
+%% file         sfcn_controller_error_readerror.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_controller_error_readerror "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("errorcodes.h")>
+
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %% get the name of the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+
+  %% create a buffer that can be used for storing error data
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static tErrCodeData errCodesReadError;\n")>
+%endfunction
+
+
+%% Function: Outputs ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+%%
+{
+  %% read total number of registered errors
+  %if ISEQUAL(CAST("Number",block.RTWdata.eeprom), 0)
+  %<LibBlockOutputSignal(0, "", "", 0)> = ErrCodesGetNumActiveErrors(); 
+  %else
+  %<LibBlockOutputSignal(0, "", "", 0)> = ErrCodesGetNumSavedErrors(); 
+  %endif
+
+  %% check if the specified error number is valid, after converting it to index.
+  %% note that this automatically also works if the input was 0 due to underflow.
+  if ((%<LibBlockInputSignal(0, "", "", 0)> - 1) >= ERRCODES_NUM_OF_MAX_ERRORS)
+  {
+    %% not a valid error number so this error is not set
+    %<LibBlockOutputSignal(1, "", "", 0)> = 0;
+    %<LibBlockOutputSignal(2, "", "", 0)> = 0;
+    %<LibBlockOutputSignal(3, "", "", 0)> = 0;
+    %<LibBlockOutputSignal(4, "", "", 0)> = 0;
+  }
+  else
+  {
+    %% read the error info
+    %if ISEQUAL(CAST("Number",block.RTWdata.eeprom), 0)
+    if (ErrCodesGetActiveErrors(&errCodesReadError, (%<LibBlockInputSignal(0, "", "", 0)> - 1), 1) > 0)
+    %else
+    if (ErrCodesGetSavedErrors(&errCodesReadError, (%<LibBlockInputSignal(0, "", "", 0)> - 1), 1) > 0)
+    %endif
+    {
+      %% error is set so read it
+      %<LibBlockOutputSignal(1, "", "", 0)> = errCodesReadError.code;
+      %<LibBlockOutputSignal(2, "", "", 0)> = errCodesReadError.param;
+      %<LibBlockOutputSignal(3, "", "", 0)> = errCodesReadError.occurrence;
+      %<LibBlockOutputSignal(4, "", "", 0)> = errCodesReadError.timestamp;
+    }
+    else
+    {
+      %% error is not set
+      %<LibBlockOutputSignal(1, "", "", 0)> = 0;
+      %<LibBlockOutputSignal(2, "", "", 0)> = 0;
+      %<LibBlockOutputSignal(3, "", "", 0)> = 0;
+      %<LibBlockOutputSignal(4, "", "", 0)> = 0;
+    }
+  }
+}
+    %%
+%endfunction
+
+%%******************************* end of sfcn_controller_error_readerror.tlc ************

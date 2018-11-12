@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">UART send</font><br>
+<p>Block to send a byte via the UART interface</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The block can be used to transmit a byte via the UART interface. Optionally, a status output
+can be enabled. </p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Channel</b>
+    <dd>Select the UART channel
+<dt><b>Use status output</b>
+    <dd>Enables/disables the status output port of the block.
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>Connect the byte value to transmit<br>
+The used datatype is of 8-bit unsigned.
+</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<p>If this output has a value of 0, the byte could not be transmitted. This happens
+if the transmit buffer was configured too small.<br>
+The used datatype is boolean.
+</p>
+
+
+</body>
+</html>

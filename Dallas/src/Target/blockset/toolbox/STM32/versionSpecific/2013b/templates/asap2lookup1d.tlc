@@ -1,0 +1,304 @@
+%% 
+%%  
+%% 
+%%
+%% Abstract:
+%%   Template definitions for Lookup1D.
+%%
+%% Copyright 1994-2013 The MathWorks, Inc.
+%%
+%selectfile NULL_FILE
+
+%<LibASAP2RegisterTemplate("Lookup1D")>
+
+%function ASAP2UserFcnRecordLayoutAlias_Lookup1D(dtId) void
+  %switch dtId
+    %case tSS_UINT8
+      %return "Lookup1D_UBYTE"
+    %case tSS_INT8
+      %return "Lookup1D_BYTE"
+    %case tSS_UINT16
+      %return "Lookup1D_UWORD"
+    %case tSS_INT16
+      %return "Lookup1D_WORD"
+    %case tSS_UINT32
+      %return "Lookup1D_ULONG"
+    %case tSS_INT32
+      %return "Lookup1D_SLONG"
+    %case tSS_SINGLE
+      %return "Lookup1D_FLOAT32_IEEE"
+    %case tSS_DOUBLE
+      %return "Lookup1D_FLOAT64_IEEE"
+    %default
+     %%START_ASSERT
+       %assign errTxt = "Unhandled dataType. DataTypeID = %<dtId>"
+       %<LibReportError(errTxt)>
+     %%END_ASSERT
+  %endswitch
+%endfunction
+
+%function ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(dtId) void
+  %switch dtId
+    %case tSS_UINT8
+      %return "Lookup1D_X_UBYTE"
+    %case tSS_INT8
+      %return "Lookup1D_X_BYTE"
+    %case tSS_UINT16
+      %return "Lookup1D_X_UWORD"
+    %case tSS_INT16
+      %return "Lookup1D_X_WORD"
+    %case tSS_UINT32
+      %return "Lookup1D_X_ULONG"
+    %case tSS_INT32
+      %return "Lookup1D_X_LONG"
+    %case tSS_SINGLE
+      %return "Lookup1D_X_FLOAT32_IEEE"
+    %case tSS_DOUBLE
+      %return "Lookup1D_X_FLOAT64_IEEE"
+    %default
+     %%START_ASSERT
+       %assign errTxt = "Unhandled dataType. DataTypeID = %<dtId>"
+       %<LibReportError(errTxt)>
+     %%END_ASSERT
+  %endswitch
+%endfunction
+
+%function ASAP2UserFcnWriteRecordLayout_Lookup1D() Output
+ 
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_INT8)>
+      FNC_VALUES  1 SBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+    
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_INT8)>
+      AXIS_PTS_X  1 SBYTE INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_UINT8)>
+      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+    
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_UINT8)>
+      AXIS_PTS_X  1 UBYTE INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_UINT16)>
+      FNC_VALUES  1 UWORD COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_UINT16)>
+      AXIS_PTS_X  1 UWORD INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_INT16)>
+      FNC_VALUES  1 SWORD COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_INT16)>
+      AXIS_PTS_X  1 SWORD INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_UINT32)>
+      FNC_VALUES  1 ULONG COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_UINT32)>
+      AXIS_PTS_X  1 ULONG INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_INT32)>
+      FNC_VALUES  1 SLONG COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_INT32)>
+      AXIS_PTS_X  1 SLONG INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_SINGLE)>
+      FNC_VALUES  1 FLOAT32_IEEE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_SINGLE)>
+      AXIS_PTS_X  1 FLOAT32_IEEE INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Lookup1D(tSS_DOUBLE)>
+      FNC_VALUES  1 FLOAT64_IEEE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(tSS_DOUBLE)>
+      AXIS_PTS_X  1 FLOAT64_IEEE INDEX_INCR DIRECT
+    /end   RECORD_LAYOUT
+
+%endfunction
+
+%% Function: ASAP2UserFcnWriteSTDAxisRecordLayout_Lookup1D ========
+%% Abstract: Write out record layout for Lookup 1D block characteristic whose 
+%% axis type is in Standard Axis format.
+%function ASAP2UserFcnWriteSTDAxisRecordLayout_Lookup1D(recordLayout) Output
+  %assign recordLayoutName = recordLayout.Name
+  %%
+  %assign tablePosInBus = recordLayout.STDAxisInfo[0]
+  %assign xAxisPosInBus = recordLayout.STDAxisInfo[1]
+  %%
+  %assign xDtId = recordLayout.BusElement[xAxisPosInBus].DataTypeIdx
+  %assign zDtId = recordLayout.BusElement[tablePosInBus].DataTypeIdx
+  %%
+  %assign xDtId = LibGetDataTypeStorageIdFromId(xDtId)
+  %assign zDtId = LibGetDataTypeStorageIdFromId(zDtId)
+  %%
+  %assign xAxisDataType = ASAP2UserFcnRecordLayoutAlias_Common(xDtId)
+  %assign tableDataType = ASAP2UserFcnRecordLayoutAlias_Common(zDtId)
+    /begin RECORD_LAYOUT %<recordLayoutName>
+     AXIS_PTS_X %<xAxisPosInBus+1> %<xAxisDataType> INDEX_INCR DIRECT
+     FNC_VALUES %<tablePosInBus+1> %<tableDataType> COLUMN_DIR DIRECT
+   /end   RECORD_LAYOUT
+   
+%endfunction
+
+%% Function:  ASAP2UserFcnWriteCharacteristic_Lookup1D(paramGroup,isModelArg) =
+%% Abstract:
+%%   - Write Lookup1D block characteristic to the a2l file. Depending on the axis
+%%     type call appropriate functions to write the axis description to the a2l
+%%     file.
+%%   - Supports parameters that resolve to a Simulink data objects with a 
+%%     non-Auto storage class as well as those that resolve to model arguments 
+%%     in a referenced model
+%%
+%% Arguments:
+%%   - paramGroup: Parameter group to write to A2L file as CHARACTERISTIC
+%%   - isModelArg: Is parameter a model argument?
+%function ASAP2UserFcnWriteCharacteristic_Lookup1D(paramGroup, isModelArg) Output
+  %selectfile ModelASAP2File  
+  %assign xAxisParam = paramGroup.Member[0].Reference 
+  %assign tableParam = paramGroup.Member[1].Reference
+  %% Initialize variables
+  %assign dtId                = ""
+  %assign charName            = ""
+  %assign charLongID          = ""
+  %assign charECUAddress      = ""
+  %assign charRecordLayout    = ""
+  %assign charCompuMethodName = ""
+  %assign charLowerLimit      = ""
+  %assign charUpperLimit      = ""
+  %assign inputReference      = ""   
+  %if !isModelArg
+    %selectfile ASAP2List
+    %<LibASAP2GetSymbol(tableParam)>    
+    %selectfile ModelASAP2File
+    %% Table parameter that directly resolve to Simulink data objects with a 
+    %% non-auto storage class
+    %assign dtId = LibASAP2GetDataTypeId(tableParam)
+    %%
+    %assign charName = LibASAP2GetSymbol(tableParam)
+    %assign charLongID = LibASAP2GetLongID(tableParam)
+    %assign charECUAddress = LibASAP2GetAddress(tableParam)
+    %if (paramGroup.xAxisType == "STD_AXIS")
+      %assign charRecordLayout = paramGroup.RecordLayoutName
+    %else
+      %assign charRecordLayout = ASAP2UserFcnRecordLayoutAlias_Lookup1D(dtId)
+    %endif
+    %assign charCompuMethodName = LibASAP2GetCompuMethod(tableParam)
+    %assign charLowerLimit = LibASAP2GetPhysicalMin(tableParam)
+    %assign charUpperLimit = LibASAP2GetPhysicalMax(tableParam)
+  %else
+    %% Table parameter and/or axis parameter that resolve to model arguments 
+    %% in a referenced model 
+    %assign dtId = LibGetRecordDataTypeId(tableParam) 
+    %assign prmName = FEVAL("regexprep",tableParam.Identifier, "rtp_","","once")
+    %%
+    %assign charName = "%<prmName> /* MODEL ARGUMENT */"
+    %assign charLongID = ""
+    %assign charECUAddress = "0x0000 /* @ECU_Address@%<prmName>@ */"
+    %assign charRecordLayout = ASAP2UserFcnRecordLayoutAlias_Lookup1D(dtId)
+    %assign charCompuMethodName = FcnASAP2ConstructCompuMethod(dtId, "")
+    %assign charLowerLimit = LibASAP2GetPhysicalMinFromDTId(dtId)
+    %assign charUpperLimit = LibASAP2GetPhysicalMaxFromDTId(dtId)
+  %endif  
+  
+    /begin CHARACTERISTIC      
+      /* Name                   */      %<charName>
+      /* Long Identifier        */      "%<charLongID>"
+      /* Characteristic Type    */      CURVE
+      /* ECU Address            */      %<charECUAddress>
+      /* Record Layout          */      %<charRecordLayout>
+      /* Maxdiff                */      0
+      /* Conversion Method      */      %<charCompuMethodName>
+      /* Lower Limit            */      %<charLowerLimit>
+      /* Upper Limit            */      %<charUpperLimit>
+      %%
+      %assign inputReference = paramGroup.InputValSigName
+      %assign axisName = "X-Axis"      
+      %if !ISFIELD(paramGroup,"xAxisIsCanPrm") || paramGroup.xAxisIsCanPrm == "no"
+        %if(paramGroup.xAxisType      == "COM_AXIS")
+          %<ASAP2UserFcnWriteComAxis(axisName,xAxisParam,inputReference, ...
+            TLC_FALSE)>\
+        %elseif (paramGroup.xAxisType == "STD_AXIS")
+          %<ASAP2UserFcnWriteStdAxis(axisName,xAxisParam,inputReference)>\
+        %elseif (paramGroup.xAxisType == "FIX_AXIS")
+          %<ASAP2UserFcnWriteFixAxis(axisName,xAxisParam,inputReference)>\
+        %elseif (paramGroup.xAxisType == "FIX_AXIS_PAR_LIST")
+          %<ASAP2UserFcnWriteFixAxisList(axisName,xAxisParam,inputReference)>\
+        %endif  
+      %else
+        %% If x-axis parameter resolved to a model argument in a referenced model, 
+        %% then the axis type must be a COM_AXIS
+        %assert (paramGroup.xAxisType == "COM_AXIS")
+        %<ASAP2UserFcnWriteComAxis(axisName,xAxisParam,inputReference,...
+          TLC_TRUE)>\
+      %endif
+    /end CHARACTERISTIC
+    %%
+    %if ((paramGroup.xAxisType == "COM_AXIS") && (!paramGroup.isDuplicateBreakPoint))
+      %% Initialize variables
+      %assign dtId            = ""
+      %assign axisName        = ""
+      %assign axisLongID      = ""
+      %assign axisECUAddress  = ""
+      %assign axisCompuMethod = ""
+      %assign numAxisPts      = ""
+      %assign axisLowLimit    = ""
+      %assign axisUpLimit     = ""
+      %if !ISFIELD(paramGroup,"xAxisIsCanPrm") || paramGroup.xAxisIsCanPrm == "no"
+        %selectfile ASAP2List
+        %<LibASAP2GetSymbol(xAxisParam)>
+        %selectfile ModelASAP2File
+        %assign dtId = LibASAP2GetDataTypeId(xAxisParam) 
+        %%
+        %assign axisName = LibASAP2GetSymbol(xAxisParam)
+        %assign axisLongID = LibASAP2GetLongID(xAxisParam)
+        %assign axisECUAddress = LibASAP2GetAddress(xAxisParam)
+        %assign axisCompuMethod = LibASAP2GetCompuMethod(xAxisParam)
+        %assign numAxisPts = LibASAP2GetNumAxisPts(xAxisParam)
+        %assign axisLowLimit = LibASAP2GetPhysicalMin(xAxisParam)
+        %assign axisUpLimit = LibASAP2GetPhysicalMax(xAxisParam)
+      %else
+        %assign dtId = LibGetRecordDataTypeId(xAxisParam)
+        %assign prmName = FEVAL("regexprep",xAxisParam.Identifier, "rtp_","","once")
+        %%
+        %assign axisName = "%<prmName> /* MODEL ARGUMENT */"
+        %assign axisLongID = ""
+        %assign axisECUAddress = "0x0000 /* @ECU_Address@%<prmName>@ */"
+        %assign axisCompuMethod = FcnASAP2ConstructCompuMethod(dtId, "")
+        %assign numAxisPts = LibCGTypeWidth(xAxisParam.CGTypeIdx)
+        %assign axisLowLimit = LibASAP2GetPhysicalMinFromDTId(dtId)
+        %assign axisUpLimit = LibASAP2GetPhysicalMaxFromDTId(dtId) 
+      %endif
+      
+      /begin AXIS_PTS
+      /* Name                   */      %<axisName>
+      /* Long Identifier        */      "%<axisLongID>"
+      /* ECU Address            */      %<axisECUAddress>
+      %if ISEMPTY(inputReference)
+        /* Input Quantity         */      NO_INPUT_QUANTITY
+      %else
+        /* Input Quantity         */      %<inputReference>
+      %endif
+      /* Record Layout          */      %<ASAP2UserFcnRecordLayoutAlias_X_AXIS_Lookup1D(dtId)>
+      /* Maximum Difference     */      0
+      /* Conversion Method      */      %<axisCompuMethod>
+      /* Number of Axis Pts     */      %<numAxisPts>
+      /* Lower Limit            */      %<axisLowLimit>
+      /* Upper Limit            */      %<axisUpLimit>
+      /end AXIS_PTS
+    %endif
+%endfunction

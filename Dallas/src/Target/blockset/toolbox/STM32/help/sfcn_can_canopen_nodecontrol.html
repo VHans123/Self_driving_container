@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Bodas RC-30 Series User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">CAN open Node control</font><br>
+<p>Block to control a CAN open node</p>
+<hr>
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>This CAN open node control block sends the message to set the node
+in the specified state. This state can be selected in the mask. 
+After the state request is send the block sends a RTR message to check if the 
+node is in the set state. When this is the case the done output will become 1.<br>
+</b></p>
+<hr>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Always use a CAN open node control block at the beginning to set the node to pre-operational.
+    <li>When the node isn't in the right state after this message is send, done will become -1.
+</ul>
+<hr>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>Use the CAN config block:</p>
+<ul>
+    <li>To set the baudrate for the selected CAN channel.
+    <li>To enable the specific CAN channel.
+</ul>
+<hr>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>
+<dt><b>start (port 1)</b><br>
+<dd>When the start input is 1, the message is send and the block waits the waiting time for a 
+<dd>response to check if the node is in the right state. 
+<dd>When start is made 0 again, done becomes 0 too. 
+<dd>After start has been 0 and it is made 1 the message will be send again, and the block will 
+<dd>again wait for acknowledge. <b>INT8</b><br>
+</p>
+<hr>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<dl>
+<dt><b>Node ID (port1)</b>
+    <dd>The node ID selected in the mask is put on this output, this output should be the input 
+	<dd>for the SDO write and read blocks.<b>UINT8</b>
+	
+<dt><b>Done (port2)</b>
+    <dd>The done port becomes 1 when the acknowledge message is received. 
+	<dd>When the waiting time is passed and no acknowledge message is received done will 
+	<dd>become -1. <b>INT8</b>
+	
+<dt><b>State (port3)</b>
+    <dd>The state response from the controller is put on this output.<b>UINT8</b>
+	<li> 4 = 0x04 Stopped 
+	<li> 5 = 0x05 Operational 
+	<li>127 = 0x7F Pre-Operational 
+</dl>
+<hr>
+	
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Select the used channel: 1, 2, 3 or 4.
+<dt><b>Node ID</b>
+    <dd>The CAN open node ID, can be a number between 1 and 0x3F. 
+	<dd>Be aware when ID of 0 is chosen, this means all the messages send with this ID are for all 
+	<dd>the CAN open nodes on the bus (advise to never use this).
+	
+<dt><b>Go to state</b>
+    <dd>Select the state to go to.<br>
+	<li>Pre-operational: all settings can be set in this state, no PDO messages will be send right now.
+	<li>Operational: the node is started now, many settings are locked in this state and PDO messages will be send.
+	<li>Stop: the node is stopped, no communication is possible only state messages will be received by the CAN open node.
+	<li>Reset: the node is completely reset and behaves like it is rebooted the node automatically goes into pre-operational state.
+	<li>Reset Communication: is a reset of the communication functions. Objects 0x1000 - 0x1FFF are reset to their power-on defaults. <br>
+
+<dt><b>Response waiting time</b>
+    <dd>The maximum time the block has to wait for a acknowledge response in milliseconds.	
+
+<dt><b>Sample time</b>
+    <dd>Sample time of the block. The Sample time (in seconds) defines
+        the rate at which the block is visited by the real-time scheduler of
+        the target. The value of the Sample time has to be an integer multiple
+        of the base sample time of the model.
+</dl>	
+</body>
+</html>

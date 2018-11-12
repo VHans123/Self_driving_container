@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">UART init</font><br>
+<p>Block to initialize a UART channel</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The block initializes a UART channel with the communication settings as specified by the parameters.</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Channel</b>
+    <dd>Select the UART channel
+<dt><b>Baudrate</b>
+    <dd>Select the UART baudrate
+<dt><b>Databits</b>
+    <dd>Select the number of databits to use.
+<dt><b>Parity</b>
+    <dd>Select the desired parity.
+<dt><b>Stopbits</b>
+    <dd>Select the number of stopbits to use.
+<dt><b>Transmit buffer size</b>
+    <dd>Configure the number of bytes the transmit buffer can hold. When the block to transmit a byte is called faster
+        than the byte can be physically transmitted via the UART interface, it will be placed in this buffer. Once the
+        previous byte transmission completes, the next byte in the buffer will automatically be transmitted. Note that
+        the buffer is allocated on the heap. 
+<dt><b>Receive buffer size</b>
+    <dd>Configure the number of bytes the receptoin buffer can hold. Each time a byte is received it is stored in the
+        buffer. When the block to receive a byte is called, it will read the next byte from the buffer. Note that
+        the buffer is allocated on the heap. 
+<dt><b>Use status output</b>
+    <dd>Enables/disables the status output port of the block.
+</dl>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<p>If this output has a value of 0, the UART driver could not be initialized. This happens if no space could be allocated
+on the heap for the transmit and/or receive buffer. Use the 'Get free heap' block to verify that enough space is available
+on the heap.<br>
+The used datatype is boolean.
+</p>
+
+
+</body>
+</html>

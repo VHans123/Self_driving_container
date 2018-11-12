@@ -1,0 +1,48 @@
+%%***************************************************************************************
+%% file         sfcn_ethernet_config.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2014 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_ethernet_config "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("enet.h")>
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %<LibMdlStartCustomCode("/* configure and initialize the Ethernet module */\n", "execution")>
+  %<LibMdlStartCustomCode("EnetSetIpAddress(%<block.RTWdata.ip1>, %<block.RTWdata.ip2>, %<block.RTWdata.ip3>, %<block.RTWdata.ip4>);\n", "execution")>
+  %<LibMdlStartCustomCode("EnetSetNetMask(%<block.RTWdata.nm1>, %<block.RTWdata.nm2>, %<block.RTWdata.nm3>, %<block.RTWdata.nm4>);\n", "execution")>
+  %<LibMdlStartCustomCode("EnetSetGateway(%<block.RTWdata.gw1>, %<block.RTWdata.gw2>, %<block.RTWdata.gw3>, %<block.RTWdata.gw4>);\n", "execution")>
+  %<LibMdlStartCustomCode("EnetInit();\n", "execution")>
+%endfunction
+
+
+
+%%******************************* end of sfcn_ethernet_config.tlc ****************************
+
+
+
+
+

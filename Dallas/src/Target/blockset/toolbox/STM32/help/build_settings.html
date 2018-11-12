@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Build Settings</font><br>
+<p>Option to automatically add parameters and signals</p>
+<p>Option to automatically flash after the build is complete.</p>
+
+<p><font color="#000099" size="+1"><b>Description auto add</b></font></p>
+
+<p>The option to automatically add parameters and signals runs a script which searches for constants<br>
+and signals with names which have not been defined in the workspace. When it finds a constantblock it<br>
+will check if the value is defined in the workspace and if not it will add this value as a Simulink.Parameter.<br>
+It will also set its storage class to 'ExportedGlobal', this will ensure it will end up in the ASAP2(.A2L) file.<br>
+All parameters in the ASAP2 file will be editable in HANtune. Because each constant will need a value before<br>
+the model can be build, you will be prompted for a value. (press cancel to abort the build)<br>
+All signals in the model that have a valid Matlab name will automatically be added to the workspace as<br>
+Simulink.Signal with its storage class set to 'ExportedGlobal'. These signals will become visible in HANtune.</p>
+
+<p><font color="#000099" size="+1"><b>Description auto flash</b></font></p>
+
+<p>The option to automatically start flashing after the build procedure calls MicroBoot with the interface<br>
+that was selected in the block. It will flash the .srec that was just built from the model.<br>
+Note: MicroBoot.exe must be located in ..\Host\MicroBoot\ relative to the blockset path (the path where the<br>
+model is located)</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Add signals and parameters automatically</b>
+<dd>Turns the function on or off
+<dt><b>Automatic flash after build</b>
+<dd>Choose off or the desired interface: USB, CAN or Ethernet (Ethernet only for E407)
+</dl>
+
+</body>
+</html>

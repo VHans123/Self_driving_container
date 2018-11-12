@@ -1,0 +1,170 @@
+%%***************************************************************************************
+%% file         sfcn_can_canopen_sdoread.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_can_canopen_sdoread "C"
+
+
+%% add required include files
+%<LibAddToCommonIncludes("canio.h")>
+%<LibAddToCommonIncludes("can.h")>
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %% get the name of the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+
+  %% create a buffer that can be used for storing data during message transmissions.
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static tCanDataTypes canTxData;\n")>
+  
+  %% create a buffer that can be used for storing Rx message data.
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static tCanDataTypes canRxData;\n")>
+%endfunction
+  
+%% Function: Output ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+{	
+	/*CAN ID should come from NODE controll block*/
+	uint32_t canRequestID = (uint32_t)(%<LibBlockInputSignal(0, "", "", 0)> + 0x600);
+	uint32_t canResponseID = (uint32_t)( %<LibBlockInputSignal(0, "", "", 0)> + 0x580);
+	static uint8_t requestSended = 0;
+	static uint8_t startMemory = 0;
+	uint16_t sampleTime = 0;
+	static uint8_t timeCnt = 0;
+	uint8_t cnt = 0;
+	
+	/*Check if the sample time is inherit to the model sample time*/
+	if(%<block.RTWdata.tsamp> == -1)
+	{
+		sampleTime = 10; %%<block.RTWdata.baseSampleTime>; /*baseSampleTime is in milliseconds*/
+	}
+	else
+	{
+		sampleTime = %<block.RTWdata.tsamp> * 1000; /*tsamp is in sec so time 1000 to make it milliseconds*/
+	}
+	
+	/*check if start input is 1 */
+    if ((%<LibBlockInputSignal(1, "", "", 0)> == 1) && (requestSended == 0) && (startMemory == 0))
+	{
+		startMemory = 1;
+		/*the used data type is uint8, means data type 2*/
+		%assign indexTypeNumber = 2
+		/* prepare the data of the SDO read message */
+                              
+		canTxData.%<LibGetDataTypeNameFromId(indexTypeNumber)>_info[0] = 0x40;
+		/*The LSB is sent first.*/
+		canTxData.%<LibGetDataTypeNameFromId(indexTypeNumber)>_info[1] = (uint8_t)%<block.RTWdata.index>;
+		/*The MSB is sent by bit shifting the index.*/
+		canTxData.%<LibGetDataTypeNameFromId(indexTypeNumber)>_info[2] = (uint8_t)(%<block.RTWdata.index> >> 8);
+		canTxData.%<LibGetDataTypeNameFromId(indexTypeNumber)>_info[3] = (uint8_t)%<block.RTWdata.subIndex>;
+		
+		/* fill rest of the message with 0 becaus always 8 bytes are sended*/
+		for(cnt = 4; cnt <8; cnt++)
+		{
+		canTxData.%<LibGetDataTypeNameFromId(indexTypeNumber)>_info[cnt] = 0;
+		}
+		
+		/* send the data */
+		CanTransmit(%<block.RTWdata.canBus>, canRequestID, 8, &canTxData.uint8_T_info[0]);	 /*DLC is always 8 because some devices gives an error when this is not 8*/
+		requestSended = 1;
+	}
+	/* Check if the request was send*/
+	else if(requestSended != 0 && ((timeCnt * sampleTime) < %<block.RTWdata.waitingTime>))
+	{	
+		/* Check if a message with the response ID is received */
+		if ( CanIoGetMessage(%<block.RTWdata.canBus>, canResponseID, NULL, &canRxData.uint8_T_info[0], NULL) != 0)
+		{
+			
+			/* check if the message is about the right index and sub-index */
+			if((canRxData.uint8_T_info[1] == (uint8_t)%<block.RTWdata.index>) && (canRxData.uint8_T_info[2] == (uint8_T)(%<block.RTWdata.index> >> 8)) && (canRxData.uint8_T_info[3] == (uint8_t)(%<block.RTWdata.subIndex>)))
+			{
+				requestSended = 0;
+				timeCnt = 0;
+				/*Check if an error has occurred*/
+				if((canRxData.uint8_T_info[0] == 0x80))
+				{
+					/* Put the error code on the error output port*/
+					%<LibBlockOutputSignal(2, "", "", 0)> = (uint32_t)(canRxData.uint8_T_info[7] << 24) + (canRxData.uint8_T_info[6]<< 16) + (canRxData.uint8_T_info[5]<< 8) + canRxData.uint8_T_info[4];
+				}
+				else
+				{	
+					CanTransmit(%<block.RTWdata.canBus>, 0x300, 8, &canRxData.uint8_T_info[0]);	 /*DLC is always 8 because some devices gives an error when this is not 8*/
+					/*the sdo read message is recieved oke*/
+					%<LibBlockOutputSignal(1, "", "", 0)> = (uint32_t)(canRxData.uint8_T_info[7] << 24) + (canRxData.uint8_T_info[6]<< 16) + (canRxData.uint8_T_info[5]<< 8) + canRxData.uint8_T_info[4];
+					/*Done is 1*/
+					%<LibBlockOutputSignal(0, "", "", 0)> = 1;
+				}
+			}
+			else 
+			{
+				/*Nothing to be done, just for MISRA*/
+			}
+		}
+		else
+		{
+			timeCnt ++;
+		}
+	}	
+	/* check if the request message was send and if the setted waiting time is passed*/
+	else if (((timeCnt * sampleTime) >= %<block.RTWdata.waitingTime>) && (requestSended != 0))
+	{
+		/* no response received within the waiting time*/
+		%<LibBlockOutputSignal(2, "", "", 0)> = (uint32_t)0x11111111;
+		%<LibBlockOutputSignal(0, "", "", 0)> = -1;
+		requestSended = 0;
+		timeCnt = 0;
+	}
+	else
+	{
+		/*Nothing to be done, just for MISRA*/
+	}
+	
+	/*check if start input is 0*/
+    if (%<LibBlockInputSignal(1, "", "", 0)> == 0)
+	{
+		/*this means the start signal is reset, and when it is 1 again the block may send the request again*/
+		startMemory = 0;
+		%<LibBlockOutputSignal(0, "", "", 0)> = 0;
+		%<LibBlockOutputSignal(1, "", "", 0)> = 0;
+		%<LibBlockOutputSignal(2, "", "", 0)> = 0;
+	}
+	else
+	{
+		/*Nothing to be done, just for MISRA*/
+	}
+}
+%endfunction
+
+
+%%******************************* end of sfcn_can_canopen_sdoread.tlc ***************************
+
+
+
+
+

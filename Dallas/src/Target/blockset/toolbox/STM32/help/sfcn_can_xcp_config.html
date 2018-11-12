@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">XCP over CAN config</font><br>
+<p>Block to use and config the XCP over CAN protocol</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>A 'XCP Config' block instructs the code generator to include the XCP
+over CAN protocol.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Only one instance of the XCP protocol is currently allowed on the
+    controller. 
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>Use the CAN config block:</p>
+<ul>
+    <li>To set the baudrate for the selected CAN channel.
+</ul>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Select the used channel.
+
+<dt><b>CRO identifier</b>
+    <dd>Specify the CAN CRO message identifier for XCP (master->slave).
+
+<dt><b>DTO identifier</b>
+    <dd>Specify the CAN DTO message identifier for XCP (slave->master).
+    
+</dl>
+
+</body>
+</html>

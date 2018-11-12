@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">CAN receive</font><br>
+<p>Block to receive CAN messages</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>A 'CAN Receive' block instructs the code generator to include CAN support.
+Each time the block is evaluated, the last message with the given CAN ID is used
+to get the output values. The 'new data' output gives a 1 or higher (true) if new data 
+was received since the last evaluation, otherwise a 0 (false).</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Always use a CAN config block to configure the CAN channel enabling and used baud rate.
+    <li>Two IDs are reserved for the XCP protocol by design, the CAN channel depends on the 'XCP Config' block.
+    <li>The receive mechanism adds and reserves 1 slot for each receive ID used, the number of ID's is limited by the amount of available memory (heap).
+    <li>The CAN message supports a message up to 8 bytes. This block
+    enables the user to specify the classification.
+    <li>The CAN receive block has build-in support for endianes conversion.
+    Use this support if the sending system uses a different endianes.<br>
+    The STM32 is Little-endian (LSB first).
+    <li>Connect the 'new data' output to a terminator if it is not used.
+    <li>A 'new data' value exceeding 1 indicates that messages where lost (only the most recent message is preserved). Consider increasing the sample rate of the CAN receive block.
+    <li>A 'new data' value of -1 indicates a error.
+    <li>The 'new data' is maxed at 127 (so more messages might be received since the last sample).
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>Use the CAN config block:</p>
+<ul>
+    <li>To set the baud rate for the selected CAN channel.
+    <li>To enable the specific CAN channel.
+</ul>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+    
+<p>The input port specifies the CAN ID of the message in hexadecimal format. The CAN ID must be applied in a UINT32 signal.<br>
+Set the 32nd bit to 1 in the CAN ID to configure it as a 29-bit Extended CAN identifier. For example 0x80000200 for CAN ID 0x200 as 
+29-bit identifier.
+</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<ul>
+    <dt><b>Output 1</b>
+    <dd>The first output indicates new data was received; a 0 (false) represents no new data, > 0 (true) represents the number of new messages and -1 indicates a error.
+    <dd>This will be returned as an int8. Important: note that the message data outputs only contain valid data if this output is > 0 (true).
+    <dt><b>Remaining outputs</b>
+    <dd>The remaining 1 up to 8 outputs are for data,
+    <dd>the number of ports and the port type depends on the configuration.
+</ul>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>CAN channel</b>
+    <dd>Select the used channel.
+<dt><b>Output ports</b>
+    <dd>Select the amount of ports you want from the given output type.<br>
+        You can use only up to 8 bytes.
+<dt><b>Output type</b>
+    <dd>Select the data type each output port will use.
+<dt><b>Byte ordering</b>
+    <dd>Set the appropriate byte ordering for your CAN message:
+	<dd>Checkbox checked = Most Significant Bit (MSB) is received first (Motorola format).
+	<dd>Checkbox unchecked = Least Significant Bit (LSB) is received first (Intel format).
+<dt><b>Sample time</b>
+    <dd>Sample time of the block. The Sample time (in seconds) defines
+        the rate at which the block is visited by the real-time scheduler of
+        the target. The value of the Sample time has to be an integer multiple
+        of the base sample time of the model.
+</dl>
+
+    
+
+</body>
+</html>

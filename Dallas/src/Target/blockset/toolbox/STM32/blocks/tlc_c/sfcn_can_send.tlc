@@ -1,0 +1,85 @@
+%%***************************************************************************************
+%% file         sfcn_can_send.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_can_send "C"
+
+
+%% add required include files
+%<LibAddToCommonIncludes("can.h")>
+
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %% get the name of the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+
+  %% create a buffer that can be used for storing data during message transmissions.
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static tCanDataTypes canTxData;\n")>
+  
+%endfunction
+
+
+%% Function: Update ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal input
+%%
+%function Update(block, system) Output
+  %%
+	%%
+    %% Get the used data type
+    %assign dataTypeNumber = LibGetDataTypeStorageIdFromId(CAST("Number",block.RTWdata.dataType) + 1)
+    %%
+    %% Make the data transmission block (with possible byte swap)
+    {
+    /* prepare the data */
+    %foreach counter = block.RTWdata.inputNumber
+        canTxData.%<LibGetDataTypeNameFromId(dataTypeNumber)>_info[%<counter>] = %<LibBlockInputSignal(counter + 1, "", "", 0)>;
+        %if ISEQUAL(CAST("Number",block.RTWdata.byteOrder), 1) && CAST("Number",block.RTWdata.dataType) > 2 && CAST("Number",block.RTWdata.dataType) < 7
+        /* swap the data on request */
+        ByteSwap(canTxData.%<LibGetDataTypeNameFromId(dataTypeNumber)>_info[%<counter>]);
+        %endif
+    %endforeach
+    %%
+    %% Send the data
+	  /* send the data */
+	  %% switch between Standard frame and Extended frame.
+	  %switch(%<block.RTWdata.frameType>)
+		%case 1
+    CanTransmit(%<block.RTWdata.canBus>, %<LibBlockInputSignal(0, "", "", 0)>, %<block.RTWdata.dataLength>, &canTxData.uint8_T_info[0]);
+		%break
+		%case 2
+    CanTransmit(%<block.RTWdata.canBus>, %<LibBlockInputSignal(0, "", "", 0)> | CAN_EXTID_MASK, %<block.RTWdata.dataLength>, &canTxData.uint8_T_info[0]);
+		%break
+	  %endswitch
+	}
+	%%
+%endfunction
+
+
+%%******************************* end of sfcn_can_send.tlc ******************************
+
+

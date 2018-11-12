@@ -1,0 +1,89 @@
+%%***************************************************************************************
+%% file         sfcn_can_receive.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_can_receive "C"
+
+
+%% add required include files
+%<LibAddToCommonIncludes("canio.h")>
+
+%% Function: BlockInstanceSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockInstanceSetup(block, system) void
+  %% get the name of the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+
+  %% create a buffer that can be used for storing message data.
+  %<LibSetSourceFileSection(srcFile, "Declarations", "static tCanDataTypes canRxData_%<block.RTWdata.canBus>_%<LibBlockInputSignal(0, "", "", 0)>;\n")>
+  
+%endfunction
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  /* register a CAN storage buffer for the message with this ID */
+  CanIoCreateMessageReceivedStorage(%<block.RTWdata.canBus>, %<LibBlockInputSignal(0, "", "", 0)>);
+%endfunction
+
+
+%% Function: Outputs ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+  %% Get the used data type
+  %assign dataTypeNumber = LibGetDataTypeStorageIdFromId(CAST("Number",block.RTWdata.dataType) + 1)
+
+  /* read the message data and store the new parameter */
+  %<LibBlockOutputSignal(0 , "", "", 0)> = CanIoGetMessage(%<block.RTWdata.canBus>, %<LibBlockInputSignal(0, "", "", 0)>, NULL, &canRxData_%<block.RTWdata.canBus>_%<LibBlockInputSignal(0, "", "", 0)>.uint8_T_info[0], NULL);
+
+  /* process the message data */  
+  if (%<LibBlockOutputSignal(0 , "", "", 0)> > 0)
+  {
+    %% Read the data transmission block (with possible byte swap)
+    /* read the data */
+    %foreach counter = block.RTWdata.outputNumber
+      %if ISEQUAL(CAST("Number",block.RTWdata.byteOrder), 1) && CAST("Number",block.RTWdata.dataType) > 2
+        /* swap the data on request */
+        ByteSwap(canRxData_%<block.RTWdata.canBus>_%<LibBlockInputSignal(0, "", "", 0)>.%<LibGetDataTypeNameFromId(dataTypeNumber)>_info[%<counter>]);
+      %endif
+
+      %<LibBlockOutputSignal(counter + 1, "", "", 0)> = canRxData_%<block.RTWdata.canBus>_%<LibBlockInputSignal(0, "", "", 0)>.%<LibGetDataTypeNameFromId(dataTypeNumber)>_info[%<counter>];
+    %endforeach
+  }
+%endfunction
+
+
+%%******************************* end of sfcn_can_receive.tlc ***************************
+
+
+
+
+

@@ -1,0 +1,51 @@
+%%***************************************************************************************
+%% file         sfcn_eeprom_write.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_eeprom_write "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("eeprom.h")>
+
+
+%% Function: Update ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal input
+%%
+%function Update(block, system) Output
+	%%
+    /* write the value to the EEPROM id if it doesn't already have the same value */
+    if (EepromRead(%<LibBlockInputSignal(0, "", "", 0)>) != %<LibBlockInputSignal(1, "", "", 0)>)
+    {
+      EepromWrite(%<LibBlockInputSignal(0, "", "", 0)>, %<LibBlockInputSignal(1, "", "", 0)>);
+    }
+  %%
+%endfunction
+
+
+
+%%******************************* end of sfcn_eeprom_write.tlc **************************
+
+
+
+
+

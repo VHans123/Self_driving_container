@@ -1,0 +1,154 @@
+%%***************************************************************************************
+%% file         sfcn_can_config.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_can_config "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("os.h")>
+%<LibAddToCommonIncludes("can.h")>
+%<LibAddToCommonIncludes("canio.h")>
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for configuration
+%%
+%function BlockTypeSetup(block, system) void
+  %% If one or more of the supported CAN controllers is enabled, the CAN and CANIO mudules must be
+  %% initialized first before any other functions inside these modules are called.
+	%if block.RTWdata.canBus1 || block.RTWdata.canBus2
+    %<LibMdlStartCustomCode("/* initialize the CAN driver. */\n", "execution")>
+    %<LibMdlStartCustomCode("CanInit(%<block.RTWdata.txBufSize>, %<block.RTWdata.evBufSize>);\n", "execution")>
+  %endif
+	%if block.RTWdata.canBus1
+    %<LibMdlStartCustomCode("/* initialize the CAN I/O module for channel 1 */\n", "execution")>
+    %<LibMdlStartCustomCode("CanIoInit(0);\n", "execution")>
+  %endif
+	%if block.RTWdata.canBus2
+    %<LibMdlStartCustomCode("/* initialize the CAN I/O module for channel 2 */\n", "execution")>
+    %<LibMdlStartCustomCode("CanIoInit(1);\n", "execution")>
+  %endif
+  
+  %% create a type definitions with the same name as the Simulink data types.
+  %openfile buffer
+  typedef union t_can_data_types
+  {
+      /* simulink types (for quick reference) */
+      uint8_t uint8_T_info[CAN_MAX_DATA_LEN/sizeof(uint8_t)];
+      int8_t int8_T_info[CAN_MAX_DATA_LEN/sizeof(int8_t)];
+      uint16_t uint16_T_info[CAN_MAX_DATA_LEN/sizeof(uint16_t)];
+      int16_t int16_T_info[CAN_MAX_DATA_LEN/sizeof(uint16_t)];
+      uint32_t uint32_T_info[CAN_MAX_DATA_LEN/sizeof(uint32_t)];
+      int32_t int32_T_info[CAN_MAX_DATA_LEN/sizeof(int32_t)];
+      uint8_t boolean_T_info[CAN_MAX_DATA_LEN/sizeof(uint8_t)];
+  } __attribute__((packed)) tCanDataTypes;
+  %closefile buffer
+  %<LibCacheTypedefs(buffer)>
+
+  %% get the name of the model's source file.
+  %assign srcFile = LibGetModelDotCFile()
+
+  %% add the utility functions for the message data swapping.
+  %openfile buffer
+  /*
+   * Swaps the values of two bytes.
+   * a, b pointers to data values that need swapping
+   */
+  static void swap(unsigned char *a, unsigned char *b)
+  {
+      register char i = *a;
+      *a = *b;
+      *b = i;
+  } /*** end of swap ***/
+
+  /*
+   * Swaps all bytes in b. Typically used to fix endianes.
+   * b pointer to data with bytes to swap
+   * n number of bytes to swap 
+   */
+  void ByteSwap_x(uint8_t *b, size_t n)
+  {
+     int i = 0;
+     int j = n-1;
+     
+     while (i<j)
+     {
+       swap(&b[i], &b[j]);
+       i++, j--;
+     }
+  }
+  %closefile buffer
+  %<LibSetSourceFileSection(srcFile, "Functions", buffer)>
+
+  %% Add byte swapping macro
+  %openfile buffer
+  /* map ByteSwap function */
+  #define ByteSwap(x)        (ByteSwap_x((uint8_t *) &x, sizeof(x)))
+  %closefile buffer
+  %<LibSetSourceFileSection(srcFile, "Defines", buffer)>
+  
+  %% now also add the nessesary prototype.
+  %<LibCacheFunctionPrototype("void CanDrvByteSwap_x(uint8_t *b, size_t n);\n")>
+%endfunction
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+	%if block.RTWdata.canBus1
+    %% Declare a variable for storing the CAN connection result
+    %<LibMdlStartCustomCode("uint8_t canResult1;", "declaration")>
+    %% Declare a variable for storing the CAN filter configuration.
+    %<LibMdlStartCustomCode("tCanFilter canFilter1;", "declaration")>
+  /* store the CAN controller's filter configuration */
+  canFilter1.mask = %<block.RTWdata.rxMask1>;
+  canFilter1.code = %<block.RTWdata.rxCode1>;
+  canFilter1.mode = %<block.RTWdata.rxMode1>;
+  /* connect and synchronize the CAN bus */
+  canResult1 = CanConnect(0, %<block.RTWdata.baudRate1>, &canFilter1);
+  configASSERT(canResult1 == TRUE);
+  %endif
+	%if block.RTWdata.canBus2
+    %% Declare a variable for storing the CAN connection result
+    %<LibMdlStartCustomCode("uint8_t canResult2;", "declaration")>
+    %% Declare a variable for storing the CAN filter configuration.
+    %<LibMdlStartCustomCode("tCanFilter canFilter2;", "declaration")>
+  /* store the CAN controller's filter configuration */
+  canFilter2.mask = %<block.RTWdata.rxMask2>;
+  canFilter2.code = %<block.RTWdata.rxCode2>;
+  canFilter2.mode = %<block.RTWdata.rxMode2>;
+  /* connect and synchronize the CAN bus */
+  canResult2 = CanConnect(1, %<block.RTWdata.baudRate2>, &canFilter2);
+  configASSERT(canResult2 == TRUE);
+  %endif
+%endfunction
+
+
+%%******************************* end of sfcn_can_config.tlc ****************************
+
+
+
+
+

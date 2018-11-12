@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">File Logger Close</font><br>
+<p>Block to close the log-file of the File Logger module</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>With the File Logger module active, the data values of the configured signals 
+are sampled at a fixed time interval and written to the log-file on the SD-card.
+</p>
+<p>The log-file needs to be explicitly closed at the end of a logging session for the
+log-file to actually appear on the SD-card.
+</p>
+<p>Ideally, this block is called during software shutdown for example when the ignition
+signal goes low in automotive applications. An external trigger can also be used such
+as a button press event or CAN message reception.
+</p>
+
+
+</body>
+</html>

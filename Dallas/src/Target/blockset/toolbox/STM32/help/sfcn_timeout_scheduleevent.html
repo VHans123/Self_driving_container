@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Schedule Compare Event</font><br>
+<p>Schedules the next output compare event.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>
+Schedules the next output compare event. The first input determines the 
+value of the timer module's 16-bit free running counter when the event
+should trigger. The second input determines the action that should
+be taken on the timer channel's pin.</p>
+
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<dl>
+<dt><b>Counter</b>
+<dd>Value of the timer module's 16-bit free running counter at which the 
+event should trigger.<br>
+The used datatype is of uint16.<br>
+
+<dt><b>Action</b>
+<dd>Action to take on the channel's pin when the event triggers:
+<ul>
+  <li>0: set output pin to logic low.</li>
+  <li>1: set output pin to logic high.</li>
+  <li>2: invert logic state of the outpin pin.</li>
+  <li>3: do nothing to the output pin.</li>
+</ul>
+The used datatype is of uint8.<br>
+</dl>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Timer Output Pin</b>
+<dd>Selects the timer channel.
+
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+</body>
+</html>

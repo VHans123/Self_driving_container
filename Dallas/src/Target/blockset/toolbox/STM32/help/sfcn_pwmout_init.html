@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">PWM Initialization</font><br>
+<p>Controls a PWM module</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>
+A 'PWM Init' block configures one of the STM32 timer modules for PWM 
+functionality, allowing a PWM signal to be generated on up to 4 timer 
+channels and their associated output pins. Additionally, a function-call
+subsystem can be connected to the IRQ output. The subsystem will execute
+each time a PWM period completes.
+</p>
+<p>
+The generation of the PWM signal can be enabled and disabled per channel.
+</p>
+<p>
+The frequency of the PWM signal is configured on a module level. So the same configured frequency is used 
+on all enabled channels.
+</p>
+<p>
+The timer module 1 on the STM32 (TIM1) has a special feature on the first 3 channels. It can output 2 signals
+on 2 microcontroller pins where the second signal is the inverted of the first signal.
+</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>General - PWM module</b>
+<dd>Select the PWM module to use. The name in the combo box contains information about which pins on the
+target belong to this timer module. For example: 'TIM2: D2 & D3 & D1 & D0 (PA0 & PA1 & PA2 & PA3)' means 
+that timer module 2 will be configured for PWM functionality and channel 1 is outputted on microcontroller
+pin PA0, channel 2 on pin PA1, etc.
+<br><br>
+<dt><b>General - Signal frequency</b>
+<dd>Determines the signal frequency in Hz. If you click 'Apply' after entering the desired frequency it 
+will automatically be adjusted to the closest supported value. This is because not all frequencies are supported
+due to prescaler restrictions.
+<br><br>
+<dt><b>General - Signal Aligment</b>
+<dd>Determines the aligment of the signal. It can either be edge aligned or center aligned.
+<br><br>
+<dt><b>General - Enable IRQ output</b>
+<dd>Controls whether or not the IRQ output is available.
+</dl>
+
+<dl>
+<dt><b>Channel x - Generate PWM signal on channel x</b>
+<dd>Enable to configure the channel for PWM functionality so that the PWM signal is outputted on the channel's
+associated microcontroller pin.
+<br><br>
+<dt><b>Channel x - Signal polarity</b>
+<dd>Selects the polarity of the signal. With 'Active high' the signal with be logical high for the duration of the
+duty cycle, otherwise logical low.
+<br><br>
+<dt><b>Channel x - Enable inverted signal on additional output pin</b>
+<dd>When enabled, a second PWM signal will be generated on an additional microcontroller pin where the signal is
+an exact inversion of the first signal. Note that this functionality is only possible on the channel 1-3 of timer
+module 1 (TIM1). If enabled for other channels and/or timer modules, it will be ignored.
+<br><br>
+</dl>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<dl>
+<dt><b>IRQ</b>
+<dd>Allows connection of a function call subsystem. The subsystem executes at the end of each PWM period, so 
+every (1/Frequency) seconds.
+</dl>
+
+</body>
+</html>

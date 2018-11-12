@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Critical Sections</font><br>
+<p>This document explains the use of critical sections in a Simulink model that makes use of the HANcoder environment.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>Critical sections are needed whenever a piece of software needs to execute without being interrupted. They are typically
+used to guarantee data consistency. The HANcoder environment contains 2 blocks to creating critical sections: "Enter Critical
+Section" and "Enter Critical Section". These blocks must always be used as a pair. So for every "Enter Critical Section" block
+in your Simulink model, you must also add a "Exit Critical Section" block.
+</p>
+<p>
+Critical section are only needed when signal values are shared between the model (that executes at a fixed time interval) and
+a function-call subsystem connected to an interrupt source (that executes at interrupt level). This could be the case when you
+have the "Timer Input IRQ" block in your model.
+</p>
+<p>
+The topic of critical sections is best explained with an example. Let's assume you have 2 input signals that belong together: (1) 
+"event_info" and (2) "event_timestamp". Furthermore, these 2 signals are inputs to a function-call subsystem that executes at
+interrupt level. See the following illustration:
+</p>
+<img src="images\critical_section_example1.png">
+<p>
+The model in the above illustration has a data consistency problem. During software execution there is a small chance that the timer
+interrupt occurs after the "event_info" signal was written, but right before the write to "event_timestamp". In the function-call subsystem
+the "event_info" signal is up-to-date but the "event_timestamp" signal not yet. A critical section is needed to solve this data consistency 
+problem. This is best achieved with a stateflow chart:
+</p>
+<img src="images\critical_section_example2.png">
+<p>
+As a result of the critical section, the write to the 2 signals "event_info_out" and "event_timestamp_out" can not be interrupted. When 
+these 2 signals are now used as the inputs to the function-call subsystem that executes at interrupt level, there are no more data consistency
+problems.
+</p>
+
+
+</body>
+</html>

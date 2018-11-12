@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Get the total number of active or stored errors from the controller</font><br>
+<p>Block to get the total number of active/stored errors in the RAM/EEPROM of the controller</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The number active or stored errors is given, including the highest occurring severity level, assuming that the error's
+parameter was use for a severity level.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>Connect the 'highest severity' output to a terminator if not used.
+    <li>Active errors are saved at the RAM, they are lost by rebooting the ECU or by clearing the active error list.
+    <li>Stored errors are saved at the EEPROM, they are only lost by clearing the stored error list.
+    <li>Error codes 0 to 0x8000 are reserved for internal system errors.
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>(No initialisation block needed)</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<p>Two values will be returned.
+<dl>
+<dt><b>Output 1</b>
+  <dd>The first output returns the total number of errors. This will 
+  be returned as an uint8.
+<dt><b>Output 2</b>
+  <dd>The second output returns the highest error parameter (usable as severity). 
+  This will be returned as a uint8.
+</dl>
+
+</p>
+
+</body>
+</html>

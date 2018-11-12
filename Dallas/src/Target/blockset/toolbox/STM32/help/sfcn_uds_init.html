@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">UDS Init</font><br>
+<p>Block to initialize the Unified Diagnostic Services (UDS) module.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>This block initializes the Unified Diagnostic Services (UDS) module (ISO-14229) and the underlying CAN transport protocol
+(ISO-15765) module.</p> 
+
+<p>The purposes of the UDS module in the blockset is three-fold: (1) to read and clear error codes, (2) to read/write memory, and
+(3) remote ECU reset. The first and third parts, error code access and remote ECU reset, are always available. The second part, 
+memory access, can be locked with the block parameter "UDS seed/key required".</p>
+
+<p>If "UDS seed/key required" is set to FALSE (unchecked), the UDS functionality is available through the services:<br>
+<br><img src="images\uds_default_session.png">
+</p>
+
+<p>If "UDS seed/key required" is set to TRUE (checked), the UDS functionality is available through the services:<br>
+<br><img src="images\uds_extended_session.png"><br><br>
+To access the memory in this latter case, the tester needs to change to session from the default session to ECU extended diagnostic
+session, using service DiagnosticSessionControl.This session will automatically timeout and revert back to the default session if 
+no diagnostic service request is received within 5 second. The TesterPresent service can be used to keep the ECU extended diagnostic
+session active.
+</p>
+
+<p>While the ECU extended diagnostic session is active, the tester needs to unlock the memory access via a seed/key sequence using the
+SecurityAccess service. Additional UDS blocks need to be added to the Simulink model for giving back a seed to the tester (when requested) and
+for verifying the key (when received from the tester). Once unlocked, memory access is available through the ReadMemoryByAddress and
+WriteMemoryByAddress services.</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Channel</b>
+    <dd>The CAN channel to communicate on.
+<dt><b>CAN transmit ID</b>
+    <dd>CAN identifier for used for messages sent from this ECU to the diagnostic tester.
+<dt><b>CAN receive ID</b>
+    <dd>CAN identifier for used for messages sent from the diagnostic tester to this ECU.
+<dt><b>TP blocksize</b>
+    <dd>Number of consecutive frames to send/receive in a segmented transfer before a flow control frame is received/sent.
+        When not sure, use a value of 4. Refer to ISO-15765 for more information. 
+<dt><b>TP STmin</b>
+    <dd>Minimal separation time between consecutive frames in milliseconds. When not sure, use a value of 40. 
+        Refer to ISO-15765 for more information. 
+<dt><b>TP reception buffer size</b>
+    <dd>Size of the internal buffer in bytes for storing the received data during segmented data transfers. 
+        The ISO-15765 specification allows data transfers of up to 4095 bytes, so this would be the optimal size.
+        However, this might not be available on all targets.
+<dt><b>UDS transmit buffer size</b>
+    <dd>Size of the internal buffer in bytes for storing transmit data during segmented data transfers. 
+        The ISO-15765 specification allows data transfers of up to 4095 bytes, so this would be the optimal size.
+        However, this might not be available on all targets.
+<dt><b>UDS seed/key required</b>
+    <dd>As mentioned earlier, certain UDS services can be locked. Enable this checkbox to enable this locking mechanism.
+</dl>
+
+<font color="#000099" size="+1"><b>Remarks</b></font><br>
+
+<p>Make sure that the Simulink model contains a CAN config block for the channel that you want to use UDS on. 
+</p>
+
+
+</body>
+</html>

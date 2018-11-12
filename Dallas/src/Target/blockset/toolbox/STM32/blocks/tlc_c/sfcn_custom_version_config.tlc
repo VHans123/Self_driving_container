@@ -1,0 +1,49 @@
+%%***************************************************************************************
+%% file         sfcn_custom_version_config.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2012 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_custom_version_config "C"
+
+
+%% Function: BlockTypeSetup ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function BlockTypeSetup(block, system) void
+
+%assign srcFile = LibGetModelDotHFile()
+	
+%% %openfile buf = "SYS_config.h", "a"
+%% /* add define with StationIdString */
+%% #define kXcpStationIdLength %<block.RTWdata.stationIdLength>
+%% #define kXcpStationIdString "%<block.RTWdata.stationIdString>"
+%% %closefile buf
+
+%endfunction
+
+
+%%******************************* end of sfcn_custom_version_config.tlc ************************
+
+
+
+
+

@@ -1,0 +1,207 @@
+%% 
+%%  
+%% 
+%%
+%% Abstract:
+%%   Template definitions for Scalar.
+%%
+%% Copyright 1994-2013 The MathWorks, Inc.
+%%
+%selectfile NULL_FILE
+
+%<LibASAP2RegisterTemplate("Scalar")>
+
+%function ASAP2UserFcnRecordLayoutAlias_Scalar(dtId) void
+  %switch dtId
+  
+    %case tSS_BOOLEAN
+      %return "Scalar_BOOLEAN"
+    %case tSS_UINT8
+      %return "Scalar_UBYTE"
+    %case tSS_INT8
+      %return "Scalar_BYTE"
+    %case tSS_UINT16
+      %return "Scalar_UWORD"
+    %case tSS_INT16
+      %return "Scalar_SWORD"
+    %case tSS_UINT32
+      %return "Scalar_ULONG"
+    %case tSS_INT32
+      %return "Scalar_LONG"
+    %case tSS_SINGLE
+      %return "Scalar_FLOAT32_IEEE"
+   %case tSS_DOUBLE
+      %return "Scalar_FLOAT64_IEEE"
+   %default
+      %if LibIsEnumDataType(dtId)
+          %return "Scalar_LONG"
+      %endif
+
+      %% START_ASSERT
+      %assign errTxt = "Unhandled dataType. DataTypeID = %<dtId>"
+      %<LibReportError(errTxt)>
+      %% END_ASSERT
+  %endswitch
+%endfunction
+
+%function ASAP2UserFcnWriteRecordLayout_Scalar() Output
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_BOOLEAN)>
+      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+    
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_UINT8)>
+      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_INT8)>
+      FNC_VALUES  1 SBYTE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_UINT16)>
+      FNC_VALUES  1 UWORD COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_INT16)>
+      FNC_VALUES 1 SWORD COLUMN_DIR DIRECT
+    /end RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_UINT32)>
+      FNC_VALUES  1 ULONG COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_INT32)>
+      FNC_VALUES  1 SLONG COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_SINGLE)>
+      FNC_VALUES  1 FLOAT32_IEEE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT %<ASAP2UserFcnRecordLayoutAlias_Scalar(tSS_DOUBLE)>
+      FNC_VALUES  1 FLOAT64_IEEE COLUMN_DIR DIRECT
+    /end   RECORD_LAYOUT
+
+%endfunction
+
+%% Function:  ASAP2UserFcnWriteCharacteristic_Scalar(param, isModelArg, comment)
+%% Abstract:
+%%   - Write scalar characteristic to the a2l file. 
+%%   - Supports parameters that resolve to a Simulink data objects with a 
+%%     non-Auto storage class as well as those that resolve to model arguments 
+%%     in a referenced model
+%%   
+%% Arguments:
+%%   - param: Parameter to write to A2L file as CHARACTERISTIC
+%%   - isModelArg: Is parameter a model argument?
+%%   - comment (optional)
+%function ASAP2UserFcnWriteCharacteristic_Scalar(param, ...
+                                                 isModelArg, ...
+                                                 comment) Output
+  %selectfile ModelASAP2File
+  %% Initialize variables
+  %assign dtId                = ""
+  %assign dataWidth           = ""
+  %assign charName            = ""
+  %assign charLongID          = ""
+  %assign charECUAddress      = ""
+  %assign charCompuMethodName = ""
+  %assign charLowerLimit      = ""
+  %assign charUpperLimit      = ""
+  %if !isModelArg
+    %% Parameters that directly resolve to Simulink data objects with a 
+    %% non-auto storage class
+    %assign dtId = LibASAP2GetDataTypeId(param)
+    %assign dataWidth   =  LibASAP2GetParamWidth(param)
+    %%
+    %assign charName = "%<LibASAP2GetSymbol(param)> %<comment>"
+    %assign charLongID = LibASAP2GetLongID(param)
+     %assign charECUAddress = LibASAP2GetAddress(param)
+    %assign charCompuMethodName = LibASAP2GetCompuMethod(param)
+    %assign charLowerLimit = LibASAP2GetPhysicalMin(param)
+    %assign charUpperLimit = LibASAP2GetPhysicalMax(param) 
+  %else
+    %% Parameters that resolve to model arguments in a referenced model
+    %assign prmName = param.ModelArgumentIdentifier
+    %assign dataWidth =  LibCGTypeWidth(param.CGTypeIdx)
+    %assign dtId = LibASAP2GetDataTypeId(param)
+    %%
+    %assign charName = "%<prmName> %<comment>"
+    %assign charLongID = ""
+    %assign charECUAddress = "0x0000 /* @ECU_Address@%<prmName>@ */"
+    %assign charCompuMethodName = FcnASAP2ConstructCompuMethod(dtId, "")
+    %assign charLowerLimit = LibASAP2GetPhysicalMinFromDTId(dtId)
+    %assign charUpperLimit = LibASAP2GetPhysicalMaxFromDTId(dtId)
+  %endif  
+  %%
+      /begin CHARACTERISTIC 
+      /* Name                   */      %<charName> 
+      /* Long Identifier        */      "%<charLongID>"
+      %if dataWidth > 1
+      /* Type                   */      VAL_BLK 
+      %else
+      /* Type                   */      VALUE 
+      %endif
+      /* ECU Address            */      %<charECUAddress> 
+      /* Record Layout          */      %<ASAP2UserFcnRecordLayoutAlias_Scalar(dtId)> 
+      /* Maximum Difference     */      0 
+      /* Conversion Method      */      %<charCompuMethodName> 
+      /* Lower Limit            */      %<charLowerLimit> 
+      /* Upper Limit            */      %<charUpperLimit>
+      %if dataWidth > 1
+      /* Array Size             */
+        NUMBER                            %<dataWidth>
+      %endif
+    /end CHARACTERISTIC
+
+%endfunction
+
+%function ASAP2UserFcnWriteStructCharacteristic_Scalar(param) Output
+  %%
+  %assign data = LibGetGlobalMemoryMapData(param)
+  %assert data.IsStruct
+  %%
+  %% Get the ROOT Group
+  %assign rootGroup = LibASAP2CreateGroup("%<::CompiledModel.Name>", ...
+    "%<::CompiledModel.Name>", "")
+  %% Create a Group (with name same as struct name) and make it a sub-Group of
+  %% Root Group
+  %assign parentGrpName = data.Name
+  %assign parentGrp  = LibASAP2CreateGroup(parentGrpName, "", "")
+  %assign tmpVar = LibASAP2AddSubGroupToGroup(rootGroup, parentGrp)
+  %%
+  %foreach busIdx = data.StructInfo.NumElements  
+    %assign dtId = data.StructInfo.BusElement[busIdx].DataTypeIdx
+    %assign storageId = LibGetDataTypeStorageIdFromId(dtId)
+    %% Nested bus elements are not supported
+    %if !LibIsStructDataType(dtId)
+      %assign characteristicName = LibASAP2GetSymbolForBusElement(data,busIdx)   
+      %<LibASAP2AddCharacteristicToGroup(parentGrp,characteristicName)>
+      %selectfile ASAP2List
+      %<characteristicName>       
+      %assign dataWidth   =  LibASAP2GetParamWidthForBusElement(data,busIdx)
+      %selectfile ModelASAP2File
+      /begin CHARACTERISTIC 
+      /* Name                   */      %<characteristicName>
+      /* Long Identifier        */      "%<LibASAP2GetLongIDForBusElement(data,busIdx)>"
+      %if dataWidth > 1
+        /* Type                   */      VAL_BLK 
+      %else
+        /* Type                   */      VALUE 
+      %endif
+      /* ECU Address            */      %<LibASAP2GetAddressForBusElement(data,busIdx)> 
+      /* Record Layout          */      %<ASAP2UserFcnRecordLayoutAlias_Scalar(storageId)> 
+      /* Maximum Difference     */      0 
+      /* Conversion Method      */      %<LibASAP2GetCompuMethodForBusElement(data,busIdx)> 
+      /* Lower Limit            */      %<LibASAP2GetPhysicalMinForBusElement(data,busIdx)> 
+      /* Upper Limit            */      %<LibASAP2GetPhysicalMaxForBusElement(data,busIdx)>
+      %if dataWidth > 1
+        /* Array Size             */
+        NUMBER                            %<dataWidth>
+      %endif
+      /end CHARACTERISTIC     
+ 
+    %endif
+  %endforeach
+    
+%endfunction

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Quadrature Encoder Get</font><br>
+<p>Reads the Quadrature encoder counter value.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>
+When using this block, the channel A and channel B signals of the quadrate encoder should
+be connected to the channel 1 and channel 2 pins respectively of the timer module that
+was selected in the block parameters.
+</p>
+
+<p>
+The underlying software driver processes the channel A and channel B signals to create a
+32-bit signed counter as can be seen in the illustration below. <i>TI1</i> is the quadrature
+encoder's channel A, <i>TI2</i> is channel B, and <i>Counter</i> is the value returned by this block.<br>
+<img src="images\quad_encoder_counter.png">
+</p>
+
+<p>
+The counter value that is outputted by this block is of datatype int32, so its range is from –2,147,483,648 
+to 2,147,483,647. The counter will underflow/overflow if it gets out of range. To prevent the counter
+from going out of range you can manually reset the counter back to 0 through the block's boolean input.
+This input can be enabled through the checkbox 'Show counter reset input'. If a rising edge is detected 
+on the block input, the counter will be reset to 0.
+</p>
+
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<p>Counter value<br>
+The used datatype is of int32.
+</p>
+
+<font color="#000099" size="+1"><b>Input</b></font><br>
+
+<p>Counter reset trigger<br>
+The used datatype is of boolean.
+</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Quadrature Encode Module</b>
+<dd>Selects the Timer to use as the quadrature encoder module.
+
+<br><br>
+
+<dt><b>Configuration</b>
+<dd>Select if the inputs are floating or internally connected to a pull-up or pull-down resistor.
+
+
+<br><br>
+
+<dt><b>Show counter reset input</b>
+<dd>Configures if the input port for the counter reset should be shown.
+
+<br><br>
+
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Base Sample Time config</font><br>
+<p>Block to set the base sample time that should be used within that program.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p> This block gives you the opportunity to adjust the base sample time of the
+program. The smallest supported base sample time is 0.1ms (10 kHz), however this
+can be made even smaller by reconfiguring the run-time library as explained below.
+The entered value depends on how many times per second the user want to base sample 
+time through the complete model.</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+	<li>This block should always be used once in every model.
+	<li>Upon code generation, the fixed-step size of the model under:
+	Simulation -> Configuration Parameters -> Solver -> Fixed-step size
+  is automatically adjusted.
+	<li>The default base sample time is set to 10ms (100Hz)
+</ul>
+
+<font color="#000099" size="+1"><b>Declaration</b></font><br>
+
+<p>(No initialisation block needed)</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+<br><br>
+<dt><b>Extra stack</b>
+    <dd>It is possible to reserve extra stack space for the OS task that executes
+        the model on the embedded target (AppCtrlTask). A Simulink model with more
+        signals will result in more local variables in the generated code for the 
+        model's step function, using up more stack space. Note that the block 
+        "Get free Stack" can be used to monitor the stack usage.
+</dl>
+
+<p><font color="#000099" size="+1"><b>Reconfiguring the run-time library</b></font></p>
+<p>
+The default smallest supported sample time is determined by the tick time of the
+operating sytem. This can be re-configured through macro configTICK_RATE_HZ in
+the FreeRTOSConfig.h header-file of the target. Note that changing this macro
+requires a rebuild of the run-time library. This is achieved by deleting the run-time
+library file (*.a) of the target and starting the code generation process in
+Simulink.
+</p>
+
+</body>
+</html>

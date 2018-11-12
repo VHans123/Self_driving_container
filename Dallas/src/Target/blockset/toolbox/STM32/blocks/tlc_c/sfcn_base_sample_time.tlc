@@ -1,0 +1,69 @@
+%%***************************************************************************************
+%% file         sfcn_base_sample_time.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2013 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_base_sample_time "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("app.h")>
+%<LibAddToCommonIncludes("SYS_config.h")>
+%<LibAddToCommonIncludes("os.h")>
+%<LibAddToCommonIncludes("anin.h")>
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %%
+  /* configure the stack size for the task that executes the model */
+  AppCtrlTaskSetStackSize((configMINIMAL_STACK_SIZE*sizeof(portBASE_TYPE)) + %<block.RTWdata.extraStack>);
+  /* configure the sample time of the model in microseconds */
+  AppCtrlTaskSetPeriod(%<block.RTWdata.baseSampleTime>);
+  /* Run the ADC conversions ten times faster than the Simulink model */
+  ADCconversionTaskSetPeriod(%<block.RTWdata.baseSampleTime>/10);
+
+  
+  %% Write AppCtrlTaskTiming in milliseconds in SYS_config.h for global use
+  %assign AppCtrlTaskTiming = (%<block.RTWdata.baseSampleTime>/1000)
+  %assign AppCtrlTaskTimingUs = (%<block.RTWdata.baseSampleTime>)
+  %if (CAST("Number",%<AppCtrlTaskTiming>) < 1)
+  %assign AppCtrlTaskTiming = 1
+  %endif
+  
+  %openfile buf = "SYS_config.h", "a"
+  /* add define with Application control task timing */
+  #define APP_CTRL_TASK_TIMING %<AppCtrlTaskTiming>
+  #define APP_CTRL_TASK_TIMING_US %<AppCtrlTaskTimingUs>
+  %closefile buf
+  
+%endfunction
+
+
+
+%%******************************* end of sfcn_base_sample_time.tlc **********************
+
+
+
+
+

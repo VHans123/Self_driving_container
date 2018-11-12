@@ -1,0 +1,8 @@
+/**
+\defgroup   ARMCM3_STM32_Olimex_Olimexino_GCC Demo for Olimex Olimexino/GCC
+\brief      Preconfigured programs for the Olimex Olimexino and the GCC compiler.
+\details    Refer to http://feaser.com/openblt/doku.php?id=manual:demos
+            for detailed getting started instructions.
+*/
+
+

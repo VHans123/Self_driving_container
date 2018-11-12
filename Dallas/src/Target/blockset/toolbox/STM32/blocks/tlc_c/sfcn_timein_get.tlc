@@ -1,0 +1,67 @@
+%%***************************************************************************************
+%% file         sfcn_timein_get.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2014 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_timein_get "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("timein.h")>
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %%
+  /* configure the timer input pin */
+  TimeinConfigure(%<block.RTWdata.pin>);
+  TimeinConfigureZeroHzTimeout(%<block.RTWdata.pin>, %<block.RTWdata.zeroHzTimeoutMs>);
+  %%
+%endfunction
+
+%% Function: Output ==========================================================
+%%
+%% Purpose:
+%%      Code generation for signal output
+%%
+%function Outputs(block, system) Output
+	%%
+    /* read timer input related information */
+    %<LibBlockOutputSignal(0, "", "", 0)> = TimeinGetFrequency(%<block.RTWdata.pin>);
+    %<LibBlockOutputSignal(1, "", "", 0)> = TimeinGetDutyCycle(%<block.RTWdata.pin>);
+    %<LibBlockOutputSignal(2, "", "", 0)> = TimeinGetEdgeCounter(%<block.RTWdata.pin>);
+    %<LibBlockOutputSignal(3, "", "", 0)> = TimeinGetLastEdgeState(%<block.RTWdata.pin>);
+    %<LibBlockOutputSignal(4, "", "", 0)> = TimeinGetLastEdgeCount(%<block.RTWdata.pin>);
+    %<LibBlockOutputSignal(5, "", "", 0)> = TimeinGetFreeRunningCounter(%<block.RTWdata.pin>);
+    %<LibBlockOutputSignal(6, "", "", 0)> = TimeinIsZeroHzDetected(%<block.RTWdata.pin>);
+  %%
+%endfunction
+
+
+
+%%******************************* end of sfcn_timein_get.tlc ****************************
+
+
+
+
+

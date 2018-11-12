@@ -1,0 +1,26 @@
+# Change Log
+All notable changes to the HANcoder project will be documented in this file
+
+## Version 0.4
+- Changed from Sourcery Codebench lite to the GNU ARM Embedded Toolchain
+- Added support for Matlab 2014b, 2015a, 2015b, 2016a & 2016b
+- Added Analog Ouputs (D10 and D13)
+- Changed naming of the output pins: only the connector name is used (PG - 3 = pin 3 on connector PG)
+- UDP blocks have been added
+- CANopen Node blocks are added but not extensively tested
+- CANopen Client blocks have been deleted because of several issues with the blocks
+- RAM blocks have been removed, it is better to use the Simulink Data Store blocks
+- Java is no longer required. (ASAP2 post processing is now done in Matlab)
+- An auto flash function is added that allows the user to automatically start MiroBoot after a succesful build
+- A function is added which automatically adds signals and parameters for HANtune
+- The A2L file is now placed in the same directory as the model
+- The timing of the E407 is fixed. (It is no longer off by 4%)
+- The CAN receive blocks now output the last received values when no new message was received.
+
+Warning:
+- Due to a change in structure all HANcoder blocks in older models must be replaced!
+
+## Version 0.5
+- Changed template makefile to accept non-8dot3 names (short names like C:/Progra~1)
+- Increased size of additional stack in the Base Sample Time blocks
+- 

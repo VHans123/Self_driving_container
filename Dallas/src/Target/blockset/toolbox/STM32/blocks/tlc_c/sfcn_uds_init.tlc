@@ -1,0 +1,53 @@
+%%***************************************************************************************
+%% file         sfcn_uds_init.tlc
+%% brief        Target Language Compiler file that contains the code generation specifics
+%%              for an S-function with the same name.
+%%
+%%---------------------------------------------------------------------------------------
+%%                          C O P Y R I G H T
+%%---------------------------------------------------------------------------------------
+%%  Copyright 2015 (c) by HAN Automotive     http://www.han.nl     All rights reserved
+%%
+%%---------------------------------------------------------------------------------------
+%%                            L I C E N S E
+%%---------------------------------------------------------------------------------------
+%% This file is part of the HANcoder Target Matlab/Simulink Blockset environment. For the
+%% licensing terms, please contact HAN Automotive.
+%%
+%% This software has been carefully tested, but is not guaranteed for any particular
+%% purpose. HAN Automotive does not offer any warranties and does not guarantee the 
+%% accuracy, adequacy, or completeness of the software and is not responsible for any 
+%% errors or omissions or the results obtained from use of the software.
+%%
+%%***************************************************************************************
+%implements  sfcn_uds_init "C"
+
+%% add required include files
+%<LibAddToCommonIncludes("tp.h")>
+%<LibAddToCommonIncludes("diag.h")>
+
+
+%% Function: Start ==========================================================
+%%
+%% Purpose:
+%%      Code generation for initialization
+%%
+%function Start(block, system) Output
+  %% Make sure the UDS communication module is initialized before any other functions of
+  %% the module are called
+  %openfile buffer
+  /* initialize the transport protocol module (ISO 15765) */
+  TpInit(%<RTWdata.canChannel>, %<RTWdata.canTxId>, %<RTWdata.canRxId>, %<RTWdata.tpBlockSize>, %<RTWdata.tpSTmin>, %<RTWdata.tpRxBuffSize>);
+  /* initialize the UDS module (ISO 14229) */
+  DiagInit(%<RTWdata.udsUseSeedKey>, %<RTWdata.udsTxBuffSize>);
+  %closefile buffer
+  %<LibMdlStartCustomCode(buffer, "execution")>
+%endfunction
+
+
+%%******************************* end of sfcn_uds_init.tlc ******************************
+
+
+
+
+

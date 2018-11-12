@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Get CPU load</font><br>
+<p>Block to get the CPU load of the system</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>A 'Get CPU load' block gets the CPU load of the system.
+</p>This block can be used to get the CPU load of all registered tasks and interrupt service routines. Idle task is not 
+included.</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+<p>CPU load as a percentage.</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+<dl>
+<dt><b>Mode</b>
+  <dd>Select if the block should read the current CPU load or the maximum measured CPU load since reset.
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+
+
+</body>
+</html>

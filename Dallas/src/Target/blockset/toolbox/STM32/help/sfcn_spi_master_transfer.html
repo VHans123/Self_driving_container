@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">SPI master transfer</font><br>
+<p>Block to perform a byte exchange between the SPI master and a SPI slave.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The block transmits a byte from the SPI master and reads the response from the slave. Additionally, the usage of the slave select output pin can be configured.</p>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Channel</b>
+    <dd>Select the SPI channel
+<dt><b>Use slave select output pin</b>
+    <dd>Configure if a slave select output pin should be controlled during the transfer to select a specific slave.
+<dl>
+<dt><b>Slave select output pin</b>
+    <dd>Select the digital output that should be used as slave select.
+<dt><b>Enable slave select before transfer</b>
+    <dd>If checked, will drive the slave select output pin low to select the slave before the transfer.
+<dt><b>Disable slave select after transfer</b>
+    <dd>If checked, will drive the slave select output pin high to deselect the slave after the transfer.
+<dt><b>Delay cycles between slave select enable and transfer</b>
+    <dd>Allows a number of CPU cycles to be waited after the slave select was driven low and the actual transfer.
+        Note that the time of a cycle is system dependent. On a STM32F10x running at 72 MHz, 80 cycles are 
+        approximately 10 &micro;s. On a STM32F40x running at 168 Mhz, 240 cycles are approximately 10 &micro;s.
+</dl>
+<dt><b>Sample time</b>
+  <dd>Sample time of the block. The Sample time (in seconds) defines
+the rate at which the block is visited by the real-time scheduler of
+the target. The value of the Sample time has to be an integer multiple
+of the base sample time of the model.
+</dl>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<p>To transfer multiple bytes without deselecting the slave between the bytes, only check off 'Enable slave select before transfer' 
+for the first byte and only check off 'Disable slave select after transfer' for the last byte</p>
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">Timer Input IRQ</font><br>
+<p>Allows a function call subsystem to be connected to its output that gets executed each time and edge change on the 
+input pin was detected.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>
+Enables a function call subsystem to be connected that is executed on interrupt level each time an edge change
+on the input pin was detected. Because the code inside the connected subsystem is executed at interrupt level, it
+should be as short as possible to not negatively influence the interrupt latency time.
+</p>
+
+<font color="#000099" size="+1"><b>Output</b></font><br>
+
+<dl>
+<dt><b>IRQ</b>
+<dd>Allows connection of a function call subsystem.
+</dl>
+
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Timer input pin</b>
+<dd>Selects the timer input pin. Note that the timer module this pin belongs to is specified as well.
+When a timer module is used for timer input measurements, it can not be used for other timer related
+functionality such as quadrature encoder inputs, PWM outputs, etc.
+</dl>
+
+</body>
+</html>

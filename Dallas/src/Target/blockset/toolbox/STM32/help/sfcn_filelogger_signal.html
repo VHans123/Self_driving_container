@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>HANcoder STM32 Target User Manual</title>
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+
+<font color="#000099" size="+3">File Logger Signal</font><br>
+<p>Block to configure the signal to be logged by the File Logger module.</p>
+
+<p><font color="#000099" size="+1"><b>Description</b></font></p>
+
+<p>The 'File Logger Signal' block configures the input signal of the block to be logged by the File Logger 
+Module. This means that the value of the input signal will be sampled by the File Logger Module
+and written to the log-file on the SD-card.
+</p>
+
+<p><font color="#000099" size="+1"><b>Remarks</b></font></p>
+
+<ul>
+    <li>The File Logger Close block must be present and called explicitly to stop logging, otherwise no
+    file will be written to the SD-card. Ideally, this block is called during software shutdown for example
+    when the ignition signal goes low in automotive applications. An external trigger can also be used such
+    as a button press event or CAN message reception.
+</ul>
+
+<font color="#000099" size="+1"><b>Parameters</b></font><br>
+
+<dl>
+<dt><b>Signal Index</b>
+    <dd>This is a zero-based index that basically specifies in what column this signal will appear in the
+    actual log-file. In the File Logger Init block a maximum number of signals was specified, lets call it
+    'max_signals'. This parameter can have a value of 0..(max_signals-1). The first column in the log-file
+    is always the timestamp. If the Signal Index is 0, then the block's input signal value will be logged
+    into the column next to the timestamp, column 2. If the Signal Index is 1 then its value will be logged
+    into column 3, etc.
+<dt><b>Data Type</b>
+    <dd>Specify the data type of the blocks input signal.
+</dl>
+
+
+</body>
+</html>
