@@ -1,4 +1,4 @@
-# Self_driving_container
+# Self driving container
 
 This is the repository of the self driving container chassis called Dolly.
 
